@@ -1,0 +1,47 @@
+name: b40_meander_ro3003_s100
+family: meander
+f0_ghz: 2.35
+z0_ohm: 50.0
+substrate:
+  name: RO3003
+  er: 3.0
+  tan_d: 0.001
+  h_mm: 1.524
+dims_mm:
+  N: 7.0
+  Bl: 104.26
+  Bw: 57.34
+  Lcon: 10.95
+  Lr1: 19.29
+  Gnd: 14.07
+  Lms: 27.63
+  Wcon: 6.26
+  Wrad: 4.17
+  S: 0.92
+  Lstub: 7.38
+  Pstub: 29.71
+reported:
+  f0_ghz: null
+  s11_min_db: null
+  bw_mhz: null
+  gain_dbi: null
+source_pages:
+- 2
+- 4
+- 5
+- 6
+confidence: 0.6
+missing:
+- 'scale s=1.0426 = nominal 1.0426 x variant 1.0: nominal from lambda_g scaling, NOT
+  solver-verified'
+- paper-implied convention for rails/stubs, see design warnings
+notes: Adapted from Gad & Sallam Sci. Rep. 14:5769 by lambda_g scaling to LTE B40
+  (2.3-2.4 GHz). Paper band 2.2-2.7 GHz maps to 2.11-2.59 GHz at nominal s.
+fields_ghz:
+- 2.3
+- 2.35
+- 2.4
+sweep_ghz:
+- 2.0
+- 2.8
+unsupported_reason: ''

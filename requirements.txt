@@ -1,0 +1,9 @@
+numpy
+scipy
+pydantic>=2
+pyyaml
+pymupdf
+# anthropic   (optional: only for `extract` with an API key)
+matplotlib
+# HFSS (install on the PC that has HFSS): pyaedt pywin32 ansys-pythonnet
+PyNEC   # optional: only for scripts/design_b3.py and yagi_mom (design-space MoM)

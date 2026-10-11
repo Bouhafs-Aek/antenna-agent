@@ -1,0 +1,36 @@
+# TI DN034 / SWRA350 "2.4 GHz Yagi PCB Antenna" — everything the paper states, with page refs.
+# NOT a runnable agent spec: a Yagi with a printed balun is outside the supported families.
+# Use as the regression target for a future Gerber/stack-up family.
+antenna: 4-element printed Yagi-Uda (reflector = ground pour, driven dipole, 3 directors) + printed balun
+f0_ghz: 2.44            # ISM band 2.400-2.480 GHz (p8)
+z0_ohm: 50
+board_mm: {x_width: 100, z_length: 150}                       # p1, p4
+stackup:                                                       # p3-p4, Fig 6
+  type: 4-layer FR4, 1.6 mm total
+  layers_top_to_bottom: [L3 antenna-top, L2 antenna-bottom, L1 inner, L0 bottom]
+  dielectric_mm: {L3_L2: 0.226, L2_L1: 0.99, L1_L0: 0.226}
+  copper_mm: 0.0343
+  trace_w_mm: 0.4064
+  er: null              # NOT STATED ("standard FR4")
+  tan_d: null           # NOT STATED
+elements_mm:                                                   # p3, Fig 2
+  driven: {L2: 44.96, W2: 3.05, note: "arms on different layers: top arm on L3, bottom arm on L2"}
+  directors: {L3: 34.29, L4: 34.29, L5: 34.29, W3: 3.81, W4: 3.81, W5: 3.81, layer: L3}
+  spacing: {S12: 16.00, S23: 15.49, S34: 15.49, S45: 15.49, S56: 36.20}   # S56 printed without unit in the figure
+  reflector: ground pour on all four layers (p3)
+balun_fig5_callouts_mm: [0.533, 7.87, 3.05, 1.02, 1.83, 5.13, 9.19, 0.406]   # p4: mapping to features NOT recoverable from the PDF
+reported:
+  bw_minus10dB_mhz: 497                 # 2126-2623 MHz (p5, text)
+  vswr_within: 1.4                      # at 2.40/2.44/2.48 GHz (p6, text)
+  ota_table_p8:
+    freq_mhz:        [2400,  2440,  2480]
+    gain_dbi:        [7.22,  7.18,  7.13]
+    directivity_dbi: [7.92,  8.62,  9.48]
+    efficiency_pct:  [85.20, 71.70, 58.24]
+    front_back_db:   [14.16, 15.77, 15.25]
+not_in_paper:
+  - FR4 er / tan_d
+  - ground-pour length (inferred ~36.85 mm = 150 - 113.15 only if S-values are edge-to-edge; unverified)
+  - SMA-to-balun feed geometry (CPW/microstrip section) and via-fence positions
+  - exact balun taper curve  ->  paper says to import the Gerber from reference design swrr074.zip (p4, ref [2])
+consistency_check: "directivity + 10log10(eff) = gain holds at all three frequencies (7.92-0.70=7.22 etc.): table read is internally consistent"

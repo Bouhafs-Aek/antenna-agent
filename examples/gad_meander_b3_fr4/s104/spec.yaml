@@ -1,0 +1,47 @@
+name: b3_meander_fr4_s104
+family: meander
+f0_ghz: 1.795
+z0_ohm: 50.0
+substrate:
+  name: FR4
+  er: 4.4
+  tan_d: 0.02
+  h_mm: 1.6
+dims_mm:
+  N: 7.0
+  Bl: 120.91
+  Bw: 66.5
+  Lcon: 12.7
+  Lr1: 22.37
+  Gnd: 16.32
+  Lms: 32.04
+  Wcon: 7.25
+  Wrad: 4.84
+  S: 0.92
+  Lstub: 8.56
+  Pstub: 34.46
+reported:
+  f0_ghz: null
+  s11_min_db: null
+  bw_mhz: null
+  gain_dbi: null
+source_pages:
+- 2
+- 4
+- 5
+- 6
+confidence: 0.6
+missing:
+- 'scale s=1.2091 = nominal 1.1626 x variant 1.04: nominal from lambda_g scaling,
+  NOT solver-verified'
+- paper-implied convention for rails/stubs, see design warnings
+notes: Adapted from Gad & Sallam Sci. Rep. 14:5769 by lambda_g scaling to LTE B3 (1.71-1.88
+  GHz). Paper band 2.2-2.7 GHz maps to 1.61-1.98 GHz at nominal s.
+fields_ghz:
+- 1.71
+- 1.795
+- 1.88
+sweep_ghz:
+- 1.5
+- 2.1
+unsupported_reason: ''
