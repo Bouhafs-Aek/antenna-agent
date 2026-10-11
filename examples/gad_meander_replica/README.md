@@ -1,7 +1,7 @@
 # Worked example: Gad & Sallam antipodal meander antenna (PDF -> HFSS -> results)
 
-Paper: A. Gad, M. Sallam, *High gain antipodal meander line antenna for point-to-point WLAN/WiMAX applications*,
-Sci. Rep. 14:5769 (2024), open access, CC BY 4.0. Copy in `paper/` (unchanged, with attribution). RO3003, 2.45 GHz, 7 radiators.
+Paper: M. M. Gad and M. O. Sallam, *High gain antipodal meander line antenna for point-to-point WLAN/WiMAX applications*,
+Scientific Reports 14, 5769 (2024), https://doi.org/10.1038/s41598-024-54994-x (open access, CC BY 4.0). The antenna design is the authors' work; full citation and BibTeX in `docs/REFERENCE.md`. Copy in `paper/` (unchanged, with attribution). RO3003, 2.45 GHz, 7 radiators.
 
 | File | What it is |
 |---|---|

@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it, and cite the reference paper it validates against."
+title: "antenna-agent"
+abstract: "Turns an antenna paper (PDF) into a simulation-ready ANSYS HFSS project and checks the result against the paper. Work in progress."
+authors:
+  - family-names: Bouhafs
+    given-names: Abdelkader
+repository-code: "https://github.com/Bouhafs-Aek/antenna-agent"
+license: MIT
+references:
+  - type: article
+    authors:
+      - family-names: Gad
+        given-names: Mohamed M.
+      - family-names: Sallam
+        given-names: Mai O.
+    title: "High gain antipodal meander line antenna for point-to-point WLAN/WiMAX applications"
+    journal: "Scientific Reports"
+    volume: 14
+    start: 5769
+    year: 2024
+    doi: "10.1038/s41598-024-54994-x"

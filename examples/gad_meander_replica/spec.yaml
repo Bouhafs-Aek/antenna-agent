@@ -1,4 +1,4 @@
-# Gad & Sallam, "High gain antipodal meander line antenna for point-to-point WLAN/WiMAX applications",
+# Mohamed M. Gad & Mai O. Sallam, "High gain antipodal meander line antenna for point-to-point WLAN/WiMAX applications",
 # Sci. Rep. 14:5769 (2024). Table 1 (final design), Fig. 6. RO3003 er=3, h=1.527 mm (text, p.2).
 name: gad_meander_2p45_ro3003
 family: meander

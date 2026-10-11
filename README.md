@@ -11,8 +11,8 @@ PDF ──▶ spec.yaml (from the paper's dimensions) ──▶ design (paper di
 ```
 
 ## Status (honest)
-- **Validated on real HFSS Student 2025 R2** (PyAEDT 1.8, Windows): Gad & Sallam antipodal meander end-fire antenna,
-  *Sci. Rep.* 14:5769 (2024), paper dimensions untouched. Band 2.155-2.695 GHz (paper 2.2-2.7), S11 min -27.4 dB at
+- **Validated on real HFSS Student 2025 R2** (PyAEDT 1.8, Windows): Gad & Sallam antipodal meander end-fire antenna
+  (M. M. Gad, M. O. Sallam, *Sci. Rep.* 14, 5769 (2024), doi:10.1038/s41598-024-54994-x), paper dimensions untouched. Band 2.155-2.695 GHz (paper 2.2-2.7), S11 min -27.4 dB at
   2.455 GHz, 9.6 dBi at 2.45 GHz, end-fire. See `examples/gad_meander_replica/` (paper PDF, spec, script, real results).
 - **LTE B3 / FR4 adaptation: not matched** (S11 min about -8 dB, Zin about 20 ohm). See `docs/RESULTS.md` and `examples/gad_meander_b3_fr4/`.
 - Reference design credit: Gad & Sallam. Code: MIT. **HFSS Student is for education/research only.**
