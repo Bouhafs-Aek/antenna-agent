@@ -52,7 +52,7 @@ cd out\paper_replica\initial
 py -3.12 hfss_build.py ..\out_hfss 2>&1 | Tee-Object -FilePath ..\run_log.txt
 ```
 HFSS opens, builds the model, solves (a few minutes), and writes into `out_hfss\`:
-`s11.csv`, `gain.csv`, `patterns.csv`, and `antenna.aedt` (open it in HFSS to inspect; the script creates no HFSS report plots, use `analyse.py`).
+`s11.csv`, `gain.csv`, `patterns.csv`, `antenna.aedt`, and the HFSS reports themselves, created inside the project (Results tree: `S11_dB`, `VSWR`, `Zin_R_X`, `Smith_S11`, `Gain_vs_freq`, `Pattern_YZ_*`, `Pattern_XY_*`, `Gain3D_*`) with their images exported as `.jpg` next to the project. `reports_log.txt` lists which reports were created. Open `antenna.aedt` in HFSS and double-click a report.
 Close any running HFSS first: `Get-Process ansysedt*, ansyscl* | Stop-Process -Force`.
 
 ## 4. Analyse

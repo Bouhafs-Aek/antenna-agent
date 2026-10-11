@@ -164,6 +164,53 @@ try:
         (OUT / "gain_error.txt").write_text(repr(e))
 
 
+    # ---- reports INSIDE HFSS (Results tree): S11, VSWR, Zin, gain, radiation patterns; images exported to OUT
+    _log = []
+
+    def _rep(name, expressions, sweep_name, **kw):
+        try:
+            r = hfss.post.create_report(expressions=expressions, setup_sweep_name=sweep_name, plot_name=name, **kw)
+            if not r:
+                raise RuntimeError("create_report returned False")
+            try:
+                hfss.post.export_report_to_jpg(str(OUT), name)
+            except Exception as ee:
+                _log.append(f"{name}: created, image export failed: {ee!r}")
+                return True
+            _log.append(f"{name}: OK")
+            return True
+        except Exception as ee:
+            _log.append(f"{name}: FAILED {ee!r}")
+            return False
+
+    _rep("S11_dB", ["dB(S(1,1))"], setup_sweep)
+    if not _rep("VSWR", ["VSWR(1)"], setup_sweep):
+        _rep("VSWR", ["(1+mag(S(1,1)))/(1-mag(S(1,1)))"], setup_sweep)
+    _rep("Zin_R_X", ["re(Z(1,1))", "im(Z(1,1))"], setup_sweep)
+    _rep("Smith_S11", ["S(1,1)"], setup_sweep, plot_type="Smith Chart")
+
+
+    if (OUT / "gain.csv").exists():
+        _fs = f"Setup1 : {fsweep.name}"
+        _ff = dict(report_category="Far Fields", context="Inf")
+        _rep("Gain_vs_freq", ["dB(GainTotal)"], _fs, variations={"Freq": ["All"], "Theta": ["90deg"], "Phi": ["90deg"]},
+             primary_sweep_variable="Freq", **_ff)
+        for _fr in FIELDS:
+            _rep(f"Pattern_YZ_{_fr}GHz", ["dB(GainTotal)"], _fs,
+                 variations={"Freq": [f"{_fr}GHz"], "Theta": ["All"], "Phi": ["90deg"]},
+                 primary_sweep_variable="Theta", plot_type="Radiation Pattern", **_ff)
+            _rep(f"Pattern_XY_{_fr}GHz", ["dB(GainTotal)"], _fs,
+                 variations={"Freq": [f"{_fr}GHz"], "Theta": ["90deg"], "Phi": ["All"]},
+                 primary_sweep_variable="Phi", plot_type="Radiation Pattern", **_ff)
+        _fc = FIELDS[len(FIELDS) // 2]
+        _rep(f"Gain3D_{_fc}GHz", ["dB(GainTotal)"], _fs,
+             variations={"Freq": [f"{_fc}GHz"], "Theta": ["All"], "Phi": ["All"]},
+             primary_sweep_variable="Phi", secondary_sweep_variable="Theta", plot_type="3D Polar Plot", **_ff)
+
+
+    (OUT / "reports_log.txt").write_text("\n".join(_log))
+
+
     hfss.save_project()
 finally:
     try:
