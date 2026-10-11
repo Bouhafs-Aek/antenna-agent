@@ -1,0 +1,11 @@
+numpy
+scipy
+pydantic>=2
+pyyaml
+pymupdf
+anthropic
+matplotlib
+# solvers (install where the simulator lives):
+# ansys-aedt-core   (HFSS)
+# cst python package from <CST install>/Library/Python   (CST)
+PyNEC   # optional: only for scripts/design_b3.py and yagi_mom (design-space MoM)

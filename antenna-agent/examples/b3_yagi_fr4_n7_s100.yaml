@@ -1,0 +1,65 @@
+name: b3_yagi_fr4_n7_s100
+family: printed_yagi
+f0_ghz: 1.795
+z0_ohm: 50.0
+substrate:
+  name: FR4
+  er: 4.4
+  tan_d: 0.02
+  h_mm: 1.6
+dims_mm:
+  L2: 58.75
+  W2: 4.15
+  L3: 52.2
+  W3: 5.18
+  L4: 51.5
+  W4: 5.18
+  L5: 50.8
+  W5: 5.18
+  L6: 50.1
+  W6: 5.18
+  L7: 49.45
+  W7: 5.18
+  L8: 48.75
+  W8: 5.18
+  L9: 48.05
+  W9: 5.18
+  S12: 19.1
+  S23: 25.1
+  S34: 25.8
+  S45: 26.55
+  S56: 27.25
+  S67: 28.0
+  S78: 28.75
+  S89: 29.45
+  S910: 25.0
+  Lp: 50.0
+  Bw: 136.0
+  Bl: 325.41
+  Ws: 0.4064
+  h32: 0.226
+  h21: 0.99
+  h10: 0.226
+  tcu: 0.0343
+reported:
+  f0_ghz: null
+  s11_min_db: null
+  bw_mhz: null
+  gain_dbi: null
+source_pages: []
+confidence: 0.7
+missing:
+- FR4 er/tan_d assumed 4.4/0.02
+- balun not modelled (ideal 50 ohm port on the two-wire feed)
+- in-plane scale s compensates the uncertainty of the wavelength-compression factor
+  k (calibrated 0.80+-0.02)
+notes: Designed by antenna_agent.yagi_mom (calibrated on TI DN034). In-plane scale
+  s=1.0 applied to all in-plane dims; stack-up, strip width of the two-wire feed unchanged.
+fields_ghz:
+- 1.71
+- 1.795
+- 1.88
+sweep_ghz:
+- 1.6
+- 2.0
+unsupported_reason: ''

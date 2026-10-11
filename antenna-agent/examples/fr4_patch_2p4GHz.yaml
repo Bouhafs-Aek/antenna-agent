@@ -1,0 +1,8 @@
+name: fr4_patch_2p4GHz
+family: rect_patch
+f0_ghz: 2.4
+z0_ohm: 50
+substrate: {name: FR4, er: 4.4, tan_d: 0.02, h_mm: 1.6}
+dims_mm: {}            # nothing stated -> everything derived, L and y0 tunable
+reported: {f0_ghz: 2.4, s11_min_db: -20}
+confidence: 0.9
