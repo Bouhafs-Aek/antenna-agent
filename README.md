@@ -7,7 +7,7 @@ the result against the paper. **No API key, no internet needed at run time**: Cl
 This repo follows one plan on one antenna family, **the Gad & Sallam antipodal meander end-fire antenna**:
 1. **Paper replica** on RO3003 - done, validated against the paper (`examples/gad_meander_replica/`).
 2. **LTE B3 adaptation** on RO3003, same geometry scaled, no matching network - done, **s100 is the retained design** (`examples/gad_meander_b3_ro3003/`).
-3. **Both again on FR4** (er 4.4, h 1.6 mm) - generated, to simulate (`examples/gad_meander_fr4/`).
+3. **Both again on FR4** (er 4.4, h 1.6 mm) - first FR4 run mistuned (f_res 2.66 GHz instead of 2.45), corrected scale 0.925 generated, to simulate (`examples/gad_meander_fr4/`).
 
 ```
 paper.pdf --(Claude)--> spec.yaml --> design --> geometry --> hfss_build.py --> HFSS Student --> s11/gain/patterns.csv --> report

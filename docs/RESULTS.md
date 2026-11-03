@@ -19,5 +19,6 @@ Details and files: `examples/gad_meander_b3_ro3003/`.
 | s104 | 1.422 | 1.721 GHz | -17.8 dB | 1.536-1.803 GHz | 9.6 dBi |
 s100 covers B3 at S11 <= -10.1 dB over 1.71-1.88 GHz (board 75.2 x 136.8 mm). Not yet done: fabrication/measurement, radiation efficiency, connector and housing effects.
 
-## 3. FR4 (er 4.4, tan d 0.02, h 1.6 mm): generated, not simulated
-Replica and B3 rebuilt on FR4 with the guided-wavelength rule (`examples/gad_meander_fr4/`). No result is claimed until `run_fr4.ps1` has been run and the CSV files analysed.
+## 3. FR4 (er 4.4, tan d 0.02, h 1.6 mm)
+Iteration 1 (replica on FR4, guided-wavelength scale 0.852, simulated): f_res 2.661 GHz instead of 2.45, S11 min -11.2 dB, Zin 22 - j31 ohm at 2.45 GHz, usable band 2.62-2.70 GHz only, gain 4.5 / 7.8 / 9.2 dBi at 2.2 / 2.45 / 2.7 GHz.
+Corrected scale 0.925. Iteration 2 (replica and B3, three scales each) is generated and not simulated: `examples/gad_meander_fr4/`.

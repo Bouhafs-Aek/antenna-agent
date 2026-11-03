@@ -23,8 +23,8 @@ function Stop-Aedt {
 }
 # case, variant, scale, target GHz, band
 $cases = @()
-foreach ($v in @(@("v100",0.8518),@("v096",0.8177),@("v104",0.8859))) { $cases += ,@("replica",$v[0],$v[1],"2.45","2.2","2.7") }
-foreach ($v in @(@("v100",1.1650),@("v096",1.1184),@("v104",1.2116))) { $cases += ,@("b3",$v[0],$v[1],"1.795","1.71","1.88") }
+foreach ($v in @(@("v100",0.9250),@("v096",0.8880),@("v104",0.9620))) { $cases += ,@("replica",$v[0],$v[1],"2.45","2.2","2.7") }
+foreach ($v in @(@("v100",1.2651),@("v096",1.2145),@("v104",1.3157))) { $cases += ,@("b3",$v[0],$v[1],"1.795","1.71","1.88") }
 $todo = @()
 foreach ($c in $cases) {
   if ($Case -ne "all" -and $c[0] -ne $Case) { continue }

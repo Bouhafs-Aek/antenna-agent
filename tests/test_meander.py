@@ -95,7 +95,7 @@ def test_fr4_cases_use_fr4_and_lambda_g_scale():
     fr4 = EX / "gad_meander_fr4"
     ro = load_spec(EX / "gad_meander_replica" / "spec.yaml")
     e = lambda er: eeff_ms(er, w50_over_h(er))
-    k = (e(3.0) / e(4.4)) ** 0.5
+    k = 0.925  # measured on the first FR4 run (guided-wavelength guess 0.852 resonated 8.6 % high)
     for case, f_scale in (("replica", 1.0), ("b3", 2.455 / 1.795)):
         sp = load_spec(fr4 / case / "specs" / "v100.yaml")
         assert sp.substrate.er == 4.4 and sp.substrate.tan_d == 0.02 and sp.substrate.h_mm == 1.6

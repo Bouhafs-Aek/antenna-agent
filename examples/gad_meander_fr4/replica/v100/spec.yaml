@@ -9,17 +9,17 @@ substrate:
   h_mm: 1.6
 dims_mm:
   N: 7.0
-  Bl: 85.18
-  Bw: 46.85
-  Lcon: 8.94
-  Lr1: 15.76
-  Gnd: 11.5
-  Lms: 22.57
-  Wcon: 5.11
-  Wrad: 3.41
+  Bl: 92.5
+  Bw: 50.88
+  Lcon: 9.71
+  Lr1: 17.11
+  Gnd: 12.49
+  Lms: 24.51
+  Wcon: 5.55
+  Wrad: 3.7
   S: 0.92
-  Lstub: 6.03
-  Pstub: 24.28
+  Lstub: 6.55
+  Pstub: 26.36
 reported:
   f0_ghz: null
   s11_min_db: null
@@ -32,10 +32,9 @@ source_pages:
 - 6
 confidence: 0.8
 missing: []
-notes: 'Gad & Sallam meander on FR4 (er 4.4, tan d 0.02, h 1.6 mm). Every in-plane
-  length x s = 0.8518 (lambda_g rule: RO3003 scale x sqrt(eeff_RO3003/eeff_FR4) x
-  variant 1.00); 50 ohm strip re-derived; N, S unchanged; no matching network; NOT
-  solver-verified until simulated'
+notes: Gad & Sallam meander on FR4 (er 4.4, tan d 0.02, h 1.6 mm), every in-plane
+  length x s=0.9250 (RO3003 scale x 0.925, factor measured in HFSS on the first FR4
+  run) x variant 1.00; no matching network; NOT solver-verified until simulated
 enclosure: null
 sma: null
 cell_mm: 2.0
