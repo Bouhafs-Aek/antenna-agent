@@ -2,7 +2,7 @@
 
 **Real HFSS Student 2025 R2 results.** Rule: every in-plane length x s, s = 2.455 / 1.795 = 1.368 (2.455 GHz = S11 minimum
 of our replica, `../gad_meander_replica`). Same substrate (RO3003, er 3.0, tan d 0.001, h 1.527 mm), 50 ohm strip width re-derived,
-N = 7 and S = 0.92 unchanged. Three scales bracket the target.
+N = 7 and S = 0.92 unchanged. Four scales bracket the target (s135 added, results pending).
 
 | Variant | s | Board (mm) | f_res | S11 min | S11 @ 1.795 | Zin @ 1.795 | -10 dB band | Worst S11 UL 1.71-1.785 | Worst S11 DL 1.805-1.88 | Peak gain 1.71 / 1.795 / 1.88 GHz |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -28,7 +28,7 @@ resonance order (smaller s = higher frequency), and s100 matches the scaling pre
 | `sXXX/preview.png`, `design.json`, `RUN.md` | geometry preview, derived design, modelling assumptions |
 | `sXXX/results/` | `s11.csv`, `gain.csv`, `patterns.csv` from HFSS, and `report/report.html` (S11, VSWR, Zin, gain, patterns) |
 | `results_summary.txt` | one line per variant (`scripts/s11_summary.py`) |
-| `run_all.ps1` | re-run the three variants |
+| `run_all.ps1` | re-run all four variants (`run_s135.ps1` for s135 only) |
 
 ## Re-run (Windows, HFSS Student)
 ```powershell

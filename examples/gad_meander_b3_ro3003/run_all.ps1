@@ -1,4 +1,4 @@
-# Simulate the 3 B3 variants in HFSS Student, one after the other, then build the reports.
+# Simulate the 4 B3 variants (s135, s100, s096, s104) in HFSS Student, one after the other, then build the reports.
 # From the repo root:  .\examples\gad_meander_b3_ro3003\run_all.ps1      (about 10-20 min per variant)
 # Needs: py -3.12 -m pip install -e . pyaedt pywin32 ansys-pythonnet numpy matplotlib
 $env:ANSYSEMSV_ROOT252="C:\Program Files\ANSYS Inc\ANSYS Student\v252\AnsysEM"
@@ -14,7 +14,7 @@ function Stop-Aedt {   # close politely first (a hard kill leaves entries in the
   }
 }
 Remove-Item "$here\my_results.txt" -ErrorAction SilentlyContinue
-foreach ($c in @(@{v="s100"; s=1.3677}, @{v="s096"; s=1.3130}, @{v="s104"; s=1.4224})) {
+foreach ($c in @(@{v="s135"; s=1.35}, @{v="s100"; s=1.3677}, @{v="s096"; s=1.3130}, @{v="s104"; s=1.4224})) {
   $out = "out_b3\$($c.v)"
   for ($try = 1; $try -le 2; $try++) {
     Stop-Aedt

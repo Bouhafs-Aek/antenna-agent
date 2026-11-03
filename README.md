@@ -36,7 +36,7 @@ Replica of the paper (a few minutes in HFSS):
 ```powershell
 .\examples\gad_meander_replica\run.ps1
 ```
-LTE B3 versions (three scales s096 / s100 / s104):
+LTE B3 versions (four scales s096 / s100 / s104 / s135):
 ```powershell
 .\examples\gad_meander_b3_ro3003\run_all.ps1
 ```
