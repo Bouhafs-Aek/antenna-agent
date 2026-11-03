@@ -1,0 +1,97 @@
+{
+  "design": {
+    "N": {
+      "mm": 7.0,
+      "src": "paper"
+    },
+    "Bl": {
+      "mm": 85.18,
+      "src": "paper"
+    },
+    "Bw": {
+      "mm": 46.85,
+      "src": "paper"
+    },
+    "Lcon": {
+      "mm": 8.94,
+      "src": "paper"
+    },
+    "Lr1": {
+      "mm": 15.76,
+      "src": "paper"
+    },
+    "Gnd": {
+      "mm": 11.5,
+      "src": "paper"
+    },
+    "Lms": {
+      "mm": 22.57,
+      "src": "paper"
+    },
+    "Wcon": {
+      "mm": 5.11,
+      "src": "paper"
+    },
+    "Wrad": {
+      "mm": 3.41,
+      "src": "paper"
+    },
+    "S": {
+      "mm": 0.92,
+      "src": "paper"
+    },
+    "Lstub": {
+      "mm": 6.03,
+      "src": "paper"
+    },
+    "Pstub": {
+      "mm": 24.28,
+      "src": "paper"
+    },
+    "Wms": {
+      "mm": 3.059,
+      "src": "derived"
+    },
+    "t": {
+      "mm": 0.035,
+      "src": "derived"
+    }
+  },
+  "aux": {
+    "geometry": {
+      "N": 7,
+      "e": [
+        20.87,
+        19.200400000000002,
+        17.664368000000003,
+        16.25121856
+      ],
+      "y": [
+        24.275,
+        33.214999999999996,
+        42.155,
+        51.095,
+        60.035,
+        68.975,
+        77.91499999999999
+      ],
+      "depth": [
+        20.87,
+        20.87,
+        19.200400000000002,
+        19.200400000000002,
+        17.664368000000003,
+        17.664368000000003,
+        16.25121856
+      ]
+    },
+    "L_eq": 41.74,
+    "warnings": [
+      "50 ohm microstrip width not stated: Hammerstad gives 3.059 mm for er=4.4, h=1.6",
+      "copper thickness 35 um assumed",
+      "meander rail depths (one lower rail per pair of radiators, scaled by S per pair) are read from the paper's Fig. 11, not stated numerically; the text states only Lr_n = S*Lr_(n-1)",
+      "stub position convention (left edge, measured from the right edge of radiator 1) is read from Fig. 6b",
+      "SMA connector not modelled: ideal 50 ohm lumped port at the board edge between strip and ground"
+    ]
+  }
+}

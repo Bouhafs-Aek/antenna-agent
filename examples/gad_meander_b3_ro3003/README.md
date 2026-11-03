@@ -2,13 +2,15 @@
 
 **Real HFSS Student 2025 R2 results.** Rule: every in-plane length x s, s = 2.455 / 1.795 = 1.368 (2.455 GHz = S11 minimum
 of our replica, `../gad_meander_replica`). Same substrate (RO3003, er 3.0, tan d 0.001, h 1.527 mm), 50 ohm strip width re-derived,
-N = 7 and S = 0.92 unchanged. Four scales bracket the target (s135 added, results pending).
+N = 7 and S = 0.92 unchanged. Three scales bracket the target; **s100 is the retained B3 design** (decision: reference for all following work).
 
 | Variant | s | Board (mm) | f_res | S11 min | S11 @ 1.795 | Zin @ 1.795 | -10 dB band | Worst S11 UL 1.71-1.785 | Worst S11 DL 1.805-1.88 | Peak gain 1.71 / 1.795 / 1.88 GHz |
 |---|---|---|---|---|---|---|---|---|---|---|
 | s096 | 1.313 | 72.2 x 131.3 | 1.860 GHz | -19.7 dB | -13.9 dB | 39.0 - j14.4 | 1.662-1.947 GHz | -10.6 dB | -14.9 dB | 8.6 / 9.3 / 9.6 dBi |
 | **s100** | **1.368** | **75.2 x 136.8** | **1.798 GHz** | **-16.6 dB** | **-16.6 dB** | **44.9 - j13.3** | **1.650-1.878 GHz** | **-11.8 dB** | **-10.1 dB** | **9.1 / 9.4 / 9.8 dBi** |
 | s104 | 1.422 | 78.2 x 142.2 | 1.721 GHz | -17.8 dB | -10.9 dB | 48.9 - j29.4 | 1.536-1.803 GHz | -11.8 dB | -7.6 dB | 9.2 / 9.6 / 10.3 dBi |
+
+**Decision: s100 is kept as the B3 design.**
 
 Conclusions
 - Resonance follows 1/s: s100 lands at 1.798 GHz for a 1.795 GHz target. Corrected scales for exactly 1.795 GHz: 1.360 / 1.370 / 1.364 (all within 0.6 % of 1.368).
@@ -28,23 +30,15 @@ resonance order (smaller s = higher frequency), and s100 matches the scaling pre
 | `sXXX/preview.png`, `design.json`, `RUN.md` | geometry preview, derived design, modelling assumptions |
 | `sXXX/results/` | `s11.csv`, `gain.csv`, `patterns.csv` from HFSS, and `report/report.html` (S11, VSWR, Zin, gain, patterns) |
 | `results_summary.txt` | one line per variant (`scripts/s11_summary.py`) |
-| `run_all.ps1` | simulate variants without results (s135), `-Force` = all four, `-Only s100,s104` = chosen ones; 4 automatic tries per variant |
+| `run_all.ps1` | `-Force` re-simulates all three, `-Only s100` a chosen one; 4 automatic tries per variant |
 
 ## Re-run (Windows, HFSS Student)
 From the repo root, `PYTHONPATH` is set by the script (no `pip install -e .` needed):
 ```powershell
-.\examples\gad_meander_b3_ro3003\run_all.ps1            # variants without results (s135)
+.\examples\gad_meander_b3_ro3003\run_all.ps1            
 .\examples\gad_meander_b3_ro3003\run_all.ps1 -Force     # all four
 .\examples\gad_meander_b3_ro3003\run_all.ps1 -Only s100,s104
 ```
 Connection to HFSS is the fragile part (Windows COM table). The script closes HFSS politely between cases, retries each variant up to 4 times,
 and stops a frozen attach after 60 s. If a variant still fails with HANG / "COM table": sign out of Windows, then `-Only <variant>`.
 Regenerate other bands: `py -3.12 scripts\scale_meander.py out_dir 1.795`.
-
-## Next iteration: s135 (s = 1.35, board 74.3 x 135.0 mm) - to be simulated
-Between s096 and s100 to gain margin at the top of the band (s100 worst point: -10.1 dB at 1.878 GHz). Expected from 1/s scaling
-only (a prediction, not a result): f_res about 1.82 GHz. No S11 or gain is claimed until simulated.
-```powershell
-.\examples\gad_meander_b3_ro3003\run_s135.ps1
-```
-Then send `out_b3\s135\s11.csv` and `gain.csv`.

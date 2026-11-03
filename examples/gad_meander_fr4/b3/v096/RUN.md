@@ -14,7 +14,7 @@ Outputs: s11.csv (f_GHz,re,im), gain.csv if far-field extraction worked (else ga
 Compare `preview.png` with the paper's figure before solving.
 
 ## Modelling decisions to review
-- 50 ohm microstrip width not stated: Hammerstad gives 3.839 mm for er=3.0, h=1.527
+- 50 ohm microstrip width not stated: Hammerstad gives 3.059 mm for er=4.4, h=1.6
 - copper thickness 35 um assumed
 - meander rail depths (one lower rail per pair of radiators, scaled by S per pair) are read from the paper's Fig. 11, not stated numerically; the text states only Lr_n = S*Lr_(n-1)
 - stub position convention (left edge, measured from the right edge of radiator 1) is read from Fig. 6b

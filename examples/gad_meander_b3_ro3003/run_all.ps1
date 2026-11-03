@@ -1,6 +1,6 @@
-# Simulate the LTE B3 variants (RO3003) in HFSS Student and build the reports.
-#   .\examples\gad_meander_b3_ro3003\run_all.ps1                 -> variants that have no results yet (today: s135)
-#   .\examples\gad_meander_b3_ro3003\run_all.ps1 -Force          -> all four (s135 s100 s096 s104)
+# Simulate the LTE B3 variants (RO3003; s100 = final design) in HFSS Student and build the reports.
+#   .\examples\gad_meander_b3_ro3003\run_all.ps1                 -> variants without results (none today: use -Force)
+#   .\examples\gad_meander_b3_ro3003\run_all.ps1 -Force          -> all three (s100 s096 s104)
 #   .\examples\gad_meander_b3_ro3003\run_all.ps1 -Only s100,s104 -> chosen variants (re-simulated)
 # Run it from the repo root. Outputs: out_b3\<variant>\ (s11.csv gain.csv patterns.csv report\), summary in examples\...\my_results.txt
 # Needs: py -3.12 -m pip install pyaedt pywin32 ansys-pythonnet numpy matplotlib   (the repo itself needs no install: PYTHONPATH is set here)
@@ -21,7 +21,7 @@ function Stop-Aedt {   # close politely first (a hard kill leaves entries in the
     Start-Sleep 5
   }
 }
-$all = @(@{v="s135"; s=1.35}, @{v="s100"; s=1.3677}, @{v="s096"; s=1.3130}, @{v="s104"; s=1.4224})
+$all = @(@{v="s100"; s=1.3677}, @{v="s096"; s=1.3130}, @{v="s104"; s=1.4224})
 $todo = @()
 foreach ($c in $all) {
   if ($Only) { if ($Only -contains $c.v) { $todo += $c } }

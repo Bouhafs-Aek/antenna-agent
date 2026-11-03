@@ -160,45 +160,45 @@ hfss = open_hfss()
 try:
     hfss.modeler.model_units = "mm"
 
-    mat = hfss.materials.add_material("sub_RO3003")
-    mat.permittivity = 3.0
-    mat.dielectric_loss_tangent = 0.001
-    hfss.modeler.create_box([-1.919284, 0.000000, 1.527000], [3.838567, 41.180000, 0.035000], name="ms", material="pec")
-    hfss.modeler.create_box([-1.919284, 35.780000, 1.527000], [34.999284, 5.400000, 0.035000], name="t_bar1", material="pec")
-    hfss.modeler.create_box([0.000000, 49.960000, 1.527000], [33.080000, 5.400000, 0.035000], name="t_bar2", material="pec")
-    hfss.modeler.create_box([0.000000, 64.140000, 1.527000], [30.433600, 5.400000, 0.035000], name="t_bar3", material="pec")
-    hfss.modeler.create_box([0.000000, 78.320000, 1.527000], [30.433600, 5.400000, 0.035000], name="t_bar4", material="pec")
-    hfss.modeler.create_box([0.000000, 92.500000, 1.527000], [27.998912, 5.400000, 0.035000], name="t_bar5", material="pec")
-    hfss.modeler.create_box([0.000000, 106.680000, 1.527000], [27.998912, 5.400000, 0.035000], name="t_bar6", material="pec")
-    hfss.modeler.create_box([0.000000, 120.860000, 1.527000], [25.758999, 5.400000, 0.035000], name="t_bar7", material="pec")
-    hfss.modeler.create_box([20.358999, 123.260000, 1.527000], [5.400000, 11.740000, 0.035000], name="t_tail", material="pec")
-    hfss.modeler.create_box([24.980000, 35.780000, 1.527000], [8.100000, 19.580000, 0.035000], name="t_con1", material="pec")
-    hfss.modeler.create_box([0.000000, 49.960000, 1.527000], [8.100000, 19.580000, 0.035000], name="t_con2", material="pec")
-    hfss.modeler.create_box([22.333600, 64.140000, 1.527000], [8.100000, 19.580000, 0.035000], name="t_con3", material="pec")
-    hfss.modeler.create_box([0.000000, 78.320000, 1.527000], [8.100000, 19.580000, 0.035000], name="t_con4", material="pec")
-    hfss.modeler.create_box([19.898912, 92.500000, 1.527000], [8.100000, 19.580000, 0.035000], name="t_con5", material="pec")
-    hfss.modeler.create_box([0.000000, 106.680000, 1.527000], [8.100000, 19.580000, 0.035000], name="t_con6", material="pec")
-    hfss.modeler.create_box([-11.479284, 2.700000, 1.527000], [22.958567, 3.838567, 0.035000], name="stub", material="pec")
-    hfss.modeler.create_box([-37.125000, 0.000000, -0.035000], [74.250000, 18.230000, 0.035000], name="gnd", material="pec")
-    hfss.modeler.create_box([-1.919284, 17.730000, -0.035000], [3.838567, 23.450000, 0.035000], name="bstrip", material="pec")
-    hfss.modeler.create_box([-33.080000, 35.780000, -0.035000], [34.999284, 5.400000, 0.035000], name="b_bar1", material="pec")
-    hfss.modeler.create_box([-33.080000, 49.960000, -0.035000], [33.080000, 5.400000, 0.035000], name="b_bar2", material="pec")
-    hfss.modeler.create_box([-30.433600, 64.140000, -0.035000], [30.433600, 5.400000, 0.035000], name="b_bar3", material="pec")
-    hfss.modeler.create_box([-30.433600, 78.320000, -0.035000], [30.433600, 5.400000, 0.035000], name="b_bar4", material="pec")
-    hfss.modeler.create_box([-27.998912, 92.500000, -0.035000], [27.998912, 5.400000, 0.035000], name="b_bar5", material="pec")
-    hfss.modeler.create_box([-27.998912, 106.680000, -0.035000], [27.998912, 5.400000, 0.035000], name="b_bar6", material="pec")
-    hfss.modeler.create_box([-25.758999, 120.860000, -0.035000], [25.758999, 5.400000, 0.035000], name="b_bar7", material="pec")
-    hfss.modeler.create_box([-25.758999, 123.260000, -0.035000], [5.400000, 11.740000, 0.035000], name="b_tail", material="pec")
-    hfss.modeler.create_box([-33.080000, 35.780000, -0.035000], [8.100000, 19.580000, 0.035000], name="b_con1", material="pec")
-    hfss.modeler.create_box([-8.100000, 49.960000, -0.035000], [8.100000, 19.580000, 0.035000], name="b_con2", material="pec")
-    hfss.modeler.create_box([-30.433600, 64.140000, -0.035000], [8.100000, 19.580000, 0.035000], name="b_con3", material="pec")
-    hfss.modeler.create_box([-8.100000, 78.320000, -0.035000], [8.100000, 19.580000, 0.035000], name="b_con4", material="pec")
-    hfss.modeler.create_box([-27.998912, 92.500000, -0.035000], [8.100000, 19.580000, 0.035000], name="b_con5", material="pec")
-    hfss.modeler.create_box([-8.100000, 106.680000, -0.035000], [8.100000, 19.580000, 0.035000], name="b_con6", material="pec")
-    hfss.modeler.create_box([-37.125000, 0.000000, 0.000000], [74.250000, 135.000000, 1.527000], name="substrate", material="sub_RO3003")
+    mat = hfss.materials.add_material("sub_FR4")
+    mat.permittivity = 4.4
+    mat.dielectric_loss_tangent = 0.02
+    hfss.modeler.create_box([-1.529487, 0.000000, 1.600000], [3.058975, 25.980000, 0.035000], name="ms", material="pec")
+    hfss.modeler.create_box([-1.529487, 22.570000, 1.600000], [22.399487, 3.410000, 0.035000], name="t_bar1", material="pec")
+    hfss.modeler.create_box([0.000000, 31.510000, 1.600000], [20.870000, 3.410000, 0.035000], name="t_bar2", material="pec")
+    hfss.modeler.create_box([0.000000, 40.450000, 1.600000], [19.200400, 3.410000, 0.035000], name="t_bar3", material="pec")
+    hfss.modeler.create_box([0.000000, 49.390000, 1.600000], [19.200400, 3.410000, 0.035000], name="t_bar4", material="pec")
+    hfss.modeler.create_box([0.000000, 58.330000, 1.600000], [17.664368, 3.410000, 0.035000], name="t_bar5", material="pec")
+    hfss.modeler.create_box([0.000000, 67.270000, 1.600000], [17.664368, 3.410000, 0.035000], name="t_bar6", material="pec")
+    hfss.modeler.create_box([0.000000, 76.210000, 1.600000], [16.251219, 3.410000, 0.035000], name="t_bar7", material="pec")
+    hfss.modeler.create_box([12.841219, 77.615000, 1.600000], [3.410000, 7.565000, 0.035000], name="t_tail", material="pec")
+    hfss.modeler.create_box([15.760000, 22.570000, 1.600000], [5.110000, 12.350000, 0.035000], name="t_con1", material="pec")
+    hfss.modeler.create_box([0.000000, 31.510000, 1.600000], [5.110000, 12.350000, 0.035000], name="t_con2", material="pec")
+    hfss.modeler.create_box([14.090400, 40.450000, 1.600000], [5.110000, 12.350000, 0.035000], name="t_con3", material="pec")
+    hfss.modeler.create_box([0.000000, 49.390000, 1.600000], [5.110000, 12.350000, 0.035000], name="t_con4", material="pec")
+    hfss.modeler.create_box([12.554368, 58.330000, 1.600000], [5.110000, 12.350000, 0.035000], name="t_con5", material="pec")
+    hfss.modeler.create_box([0.000000, 67.270000, 1.600000], [5.110000, 12.350000, 0.035000], name="t_con6", material="pec")
+    hfss.modeler.create_box([-7.559487, 1.700000, 1.600000], [15.118975, 3.058975, 0.035000], name="stub", material="pec")
+    hfss.modeler.create_box([-23.425000, 0.000000, -0.035000], [46.850000, 11.500000, 0.035000], name="gnd", material="pec")
+    hfss.modeler.create_box([-1.529487, 11.000000, -0.035000], [3.058975, 14.980000, 0.035000], name="bstrip", material="pec")
+    hfss.modeler.create_box([-20.870000, 22.570000, -0.035000], [22.399487, 3.410000, 0.035000], name="b_bar1", material="pec")
+    hfss.modeler.create_box([-20.870000, 31.510000, -0.035000], [20.870000, 3.410000, 0.035000], name="b_bar2", material="pec")
+    hfss.modeler.create_box([-19.200400, 40.450000, -0.035000], [19.200400, 3.410000, 0.035000], name="b_bar3", material="pec")
+    hfss.modeler.create_box([-19.200400, 49.390000, -0.035000], [19.200400, 3.410000, 0.035000], name="b_bar4", material="pec")
+    hfss.modeler.create_box([-17.664368, 58.330000, -0.035000], [17.664368, 3.410000, 0.035000], name="b_bar5", material="pec")
+    hfss.modeler.create_box([-17.664368, 67.270000, -0.035000], [17.664368, 3.410000, 0.035000], name="b_bar6", material="pec")
+    hfss.modeler.create_box([-16.251219, 76.210000, -0.035000], [16.251219, 3.410000, 0.035000], name="b_bar7", material="pec")
+    hfss.modeler.create_box([-16.251219, 77.615000, -0.035000], [3.410000, 7.565000, 0.035000], name="b_tail", material="pec")
+    hfss.modeler.create_box([-20.870000, 22.570000, -0.035000], [5.110000, 12.350000, 0.035000], name="b_con1", material="pec")
+    hfss.modeler.create_box([-5.110000, 31.510000, -0.035000], [5.110000, 12.350000, 0.035000], name="b_con2", material="pec")
+    hfss.modeler.create_box([-19.200400, 40.450000, -0.035000], [5.110000, 12.350000, 0.035000], name="b_con3", material="pec")
+    hfss.modeler.create_box([-5.110000, 49.390000, -0.035000], [5.110000, 12.350000, 0.035000], name="b_con4", material="pec")
+    hfss.modeler.create_box([-17.664368, 58.330000, -0.035000], [5.110000, 12.350000, 0.035000], name="b_con5", material="pec")
+    hfss.modeler.create_box([-5.110000, 67.270000, -0.035000], [5.110000, 12.350000, 0.035000], name="b_con6", material="pec")
+    hfss.modeler.create_box([-23.425000, 0.000000, 0.000000], [46.850000, 85.180000, 1.600000], name="substrate", material="sub_FR4")
     hfss.modeler.unite(['ms', 't_bar1', 't_bar2', 't_bar3', 't_bar4', 't_bar5', 't_bar6', 't_bar7', 't_tail', 't_con1', 't_con2', 't_con3', 't_con4', 't_con5', 't_con6', 'stub'])
     hfss.modeler.unite(['gnd', 'b_bar1', 'b_bar2', 'b_bar3', 'b_bar4', 'b_bar5', 'b_bar6', 'b_bar7', 'b_tail', 'b_con1', 'b_con2', 'b_con3', 'b_con4', 'b_con5', 'b_con6', 'bstrip'])
-    hfss.modeler.create_rectangle("ZX", [-4.581000, 0.000000, 0.000000], [1.527000, 9.162000], name="port_sheet")
+    hfss.modeler.create_rectangle("ZX", [-4.800000, 0.000000, 0.000000], [1.600000, 9.600000], name="port_sheet")
     _ax = getattr(hfss, 'axis_directions', None) or getattr(hfss, 'AxisDir', None)
     if _ax is None:
         from ansys.aedt.core.generic.constants import Gravity as _ax
@@ -208,19 +208,19 @@ try:
         hfss.create_lumped_port_to_sheet("port_sheet", axisdir=_ax.ZPos, impedance=50.0, portname="P1", renorm=True)
     # ---- open region (lambda/4 at the lowest frequency) + radiation boundary
     if hasattr(hfss.modeler, 'create_air_region'):
-        region = hfss.modeler.create_air_region(49.9654, 49.9654, 49.9654, 49.9654, 49.9654, 49.9654, is_percentage=False)
+        region = hfss.modeler.create_air_region(37.4741, 37.4741, 37.4741, 37.4741, 37.4741, 37.4741, is_percentage=False)
     else:
-        region = hfss.modeler.create_region([49.9654] * 6, 'Absolute Offset')
+        region = hfss.modeler.create_region([37.4741] * 6, 'Absolute Offset')
     hfss.assign_radiation_boundary_to_objects(region.name)
     # ---- setup + interpolating sweep
     setup = hfss.create_setup("Setup1")
-    setup.props["Frequency"] = "1.795000GHz"
+    setup.props["Frequency"] = "2.450000GHz"
     setup.props["MaxDeltaS"] = 0.02
     setup.props["MaximumPasses"] = 20
     setup.update()
-    sweep = hfss.create_linear_count_sweep("Setup1", "GHz", 1.500000, 2.100000, 201, sweep_type="Interpolating")
-    fsweep = hfss.create_linear_count_sweep("Setup1", "GHz", 1.71, 1.88, 3, sweep_type="Discrete", save_fields=True)
-    FIELDS = [1.71, 1.795, 1.88]
+    sweep = hfss.create_linear_count_sweep("Setup1", "GHz", 2.000000, 3.000000, 201, sweep_type="Interpolating")
+    fsweep = hfss.create_linear_count_sweep("Setup1", "GHz", 2.2, 2.7, 3, sweep_type="Discrete", save_fields=True)
+    FIELDS = [2.2, 2.45, 2.7]
     hfss.analyze_setup("Setup1")
 
     # ---- results (API robuste: pyaedt >= 1.x utilise get_expression_data, avant data_real/data_imag)

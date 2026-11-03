@@ -5,35 +5,35 @@
       "src": "paper"
     },
     "Bl": {
-      "mm": 135.0,
+      "mm": 121.16,
       "src": "paper"
     },
     "Bw": {
-      "mm": 74.25,
+      "mm": 66.64,
       "src": "paper"
     },
     "Lcon": {
-      "mm": 14.18,
+      "mm": 12.72,
       "src": "paper"
     },
     "Lr1": {
-      "mm": 24.98,
+      "mm": 22.41,
       "src": "paper"
     },
     "Gnd": {
-      "mm": 18.23,
+      "mm": 16.36,
       "src": "paper"
     },
     "Lms": {
-      "mm": 35.78,
+      "mm": 32.11,
       "src": "paper"
     },
     "Wcon": {
-      "mm": 8.1,
+      "mm": 7.27,
       "src": "paper"
     },
     "Wrad": {
-      "mm": 5.4,
+      "mm": 4.85,
       "src": "paper"
     },
     "S": {
@@ -41,15 +41,15 @@
       "src": "paper"
     },
     "Lstub": {
-      "mm": 9.56,
+      "mm": 8.58,
       "src": "paper"
     },
     "Pstub": {
-      "mm": 38.48,
+      "mm": 34.53,
       "src": "paper"
     },
     "Wms": {
-      "mm": 3.8386,
+      "mm": 3.059,
       "src": "derived"
     },
     "t": {
@@ -61,33 +61,33 @@
     "geometry": {
       "N": 7,
       "e": [
-        33.08,
-        30.4336,
-        27.998912,
-        25.75899904
+        29.68,
+        27.305600000000002,
+        25.121152000000002,
+        23.111459840000002
       ],
       "y": [
-        38.480000000000004,
-        52.660000000000004,
-        66.84,
-        81.02000000000001,
-        95.2,
-        109.38000000000001,
-        123.56
+        34.535,
+        47.254999999999995,
+        59.974999999999994,
+        72.695,
+        85.41499999999999,
+        98.13499999999999,
+        110.855
       ],
       "depth": [
-        33.08,
-        33.08,
-        30.4336,
-        30.4336,
-        27.998912,
-        27.998912,
-        25.75899904
+        29.68,
+        29.68,
+        27.305600000000002,
+        27.305600000000002,
+        25.121152000000002,
+        25.121152000000002,
+        23.111459840000002
       ]
     },
-    "L_eq": 66.16,
+    "L_eq": 59.36,
     "warnings": [
-      "50 ohm microstrip width not stated: Hammerstad gives 3.839 mm for er=3.0, h=1.527",
+      "50 ohm microstrip width not stated: Hammerstad gives 3.059 mm for er=4.4, h=1.6",
       "copper thickness 35 um assumed",
       "meander rail depths (one lower rail per pair of radiators, scaled by S per pair) are read from the paper's Fig. 11, not stated numerically; the text states only Lr_n = S*Lr_(n-1)",
       "stub position convention (left edge, measured from the right edge of radiator 1) is read from Fig. 6b",

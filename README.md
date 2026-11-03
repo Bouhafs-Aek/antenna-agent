@@ -4,8 +4,10 @@ Turn an antenna paper (PDF) into a **simulation-ready ANSYS HFSS project** on a 
 the result against the paper. **No API key, no internet needed at run time**: Claude (or any chat LLM) reads the PDF and gives you a
 `spec.yaml`; the code builds the geometry, the HFSS script and the analysis plots.
 
-This repo contains one antenna family, fully worked and measured in the solver:
-**the Gad & Sallam antipodal meander end-fire antenna** (replica of the paper) and **its LTE B3 (1.71-1.88 GHz) version**.
+This repo follows one plan on one antenna family, **the Gad & Sallam antipodal meander end-fire antenna**:
+1. **Paper replica** on RO3003 - done, validated against the paper (`examples/gad_meander_replica/`).
+2. **LTE B3 adaptation** on RO3003, same geometry scaled, no matching network - done, **s100 is the retained design** (`examples/gad_meander_b3_ro3003/`).
+3. **Both again on FR4** (er 4.4, h 1.6 mm) - generated, to simulate (`examples/gad_meander_fr4/`).
 
 ```
 paper.pdf --(Claude)--> spec.yaml --> design --> geometry --> hfss_build.py --> HFSS Student --> s11/gain/patterns.csv --> report
@@ -36,9 +38,13 @@ Replica of the paper (a few minutes in HFSS):
 ```powershell
 .\examples\gad_meander_replica\run.ps1
 ```
-LTE B3 versions (four scales s096 / s100 / s104 / s135):
+LTE B3 on RO3003 (s096 / s100 / s104, results already included; **s100 is the retained design**; `-Force` re-simulates):
 ```powershell
-.\examples\gad_meander_b3_ro3003\run_all.ps1
+.\examples\gad_meander_b3_ro3003\run_all.ps1 -Force
+```
+FR4 versions (replica + B3, three scales each, not simulated yet):
+```powershell
+.\examples\gad_meander_fr4\run_fr4.ps1
 ```
 Each run writes `s11.csv`, `gain.csv`, `patterns.csv`, `antenna.aedt` and `report\report.html` (S11, VSWR, Zin, gain, patterns).
 Reading guide: S11 below -10 dB (VSWR < 2) is the usable band; end-fire means the gain peak is at Theta 90, Phi 90 (+y).

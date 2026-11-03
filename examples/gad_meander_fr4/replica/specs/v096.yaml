@@ -1,0 +1,49 @@
+name: gad_meander_fr4_replica_v096
+family: meander
+f0_ghz: 2.45
+z0_ohm: 50.0
+substrate:
+  name: FR4
+  er: 4.4
+  tan_d: 0.02
+  h_mm: 1.6
+dims_mm:
+  N: 7.0
+  Bl: 81.77
+  Bw: 44.97
+  Lcon: 8.59
+  Lr1: 15.13
+  Gnd: 11.04
+  Lms: 21.67
+  Wcon: 4.91
+  Wrad: 3.27
+  S: 0.92
+  Lstub: 5.79
+  Pstub: 23.3
+reported:
+  f0_ghz: null
+  s11_min_db: null
+  bw_mhz: null
+  gain_dbi: null
+source_pages:
+- 2
+- 4
+- 5
+- 6
+confidence: 0.8
+missing: []
+notes: 'Gad & Sallam meander on FR4 (er 4.4, tan d 0.02, h 1.6 mm). Every in-plane
+  length x s = 0.8177 (lambda_g rule: RO3003 scale x sqrt(eeff_RO3003/eeff_FR4) x
+  variant 0.96); 50 ohm strip re-derived; N, S unchanged; no matching network; NOT
+  solver-verified until simulated'
+enclosure: null
+sma: null
+cell_mm: 2.0
+fields_ghz:
+- 2.2
+- 2.45
+- 2.7
+sweep_ghz:
+- 2.0
+- 3.0
+unsupported_reason: ''

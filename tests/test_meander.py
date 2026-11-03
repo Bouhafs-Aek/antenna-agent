@@ -89,3 +89,16 @@ def test_mock_loop_runs_for_meander(tmp_path):
     from antenna_agent.agent import run
     run(None, str(tmp_path), "mock", str(EX / "gad_meander_replica/spec.yaml"))
     assert (tmp_path / "RUN.md").exists() or any(tmp_path.iterdir())
+
+
+def test_fr4_cases_use_fr4_and_lambda_g_scale():
+    fr4 = EX / "gad_meander_fr4"
+    ro = load_spec(EX / "gad_meander_replica" / "spec.yaml")
+    e = lambda er: eeff_ms(er, w50_over_h(er))
+    k = (e(3.0) / e(4.4)) ** 0.5
+    for case, f_scale in (("replica", 1.0), ("b3", 2.455 / 1.795)):
+        sp = load_spec(fr4 / case / "specs" / "v100.yaml")
+        assert sp.substrate.er == 4.4 and sp.substrate.tan_d == 0.02 and sp.substrate.h_mm == 1.6
+        assert sp.dims_mm["Lr1"] == pytest.approx(ro.dims_mm["Lr1"] * f_scale * k, abs=0.02)
+        assert sp.dims_mm["N"] == 7 and sp.dims_mm["S"] == 0.92
+        assert missing_critical(sp) == []
