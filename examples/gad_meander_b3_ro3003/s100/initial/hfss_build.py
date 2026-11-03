@@ -55,6 +55,15 @@ def _patch_rot_fallback():
                             return
             except Exception as e:
                 last = e
+            if k >= 1 and sess:  # table still unreadable: use PyAEDT's own no-enumeration path (COM ProgID, as it does for several sessions)
+                try:
+                    self._Desktop__dispatch_win32(self.aedt_version_string)
+                    if self.odesktop is not None:
+                        self.is_grpc_api = False
+                        print("attached to AEDT through the COM ProgID (no table lookup), try %d" % (k + 1), flush=True)
+                        return
+                except Exception as e2:
+                    last = e2
             print("COM table not readable yet (%r), retry %d/%d" % (last, k + 1, tries), flush=True)
             time.sleep(wait)
         raise RuntimeError("cannot attach to AEDT through the COM table: %r. Redemarre Windows ou deconnecte-toi." % (last,))
