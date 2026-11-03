@@ -45,19 +45,31 @@ def _patch_rot_fallback():
             os._exit(5)
         wd = threading.Timer(60, _hang); wd.daemon = True; wd.start()
         last = None
-        # ANTENNA_ATTACH=progid (set by the run script on its 2nd try) uses PyAEDT's no-enumeration path (COM ProgID) first.
-        # Default: the COM-table path that worked before; the ProgID path is only a fallback.
-        if os.environ.get("ANTENNA_ATTACH") == "progid":
-            try:
-                self._Desktop__dispatch_win32(self.aedt_version_string)
-                if self.odesktop is not None:
-                    self.is_grpc_api = False
-                    wd.cancel()
-                    print("attached to AEDT through the COM ProgID (no table lookup)", flush=True)
-                    return
-            except Exception as e:
-                last = e
-                print("ProgID attach failed (%r); trying the COM table." % (e,), flush=True)
+        # Direct lookup of the AEDT entry by its name (no enumeration, which is what fails with E_OUTOFMEMORY).
+        # The ProgID route does not work on HFSS Student ("Chaine de classe incorrecte"), so it is not used.
+        try:
+            sess0 = com_active_sessions(self.aedt_version_id, self.student_version, self.non_graphical)
+            rot0 = pythoncom.GetRunningObjectTable()
+            tried = []
+            for pid in sess0:
+                for d in range(10):
+                    for pre in ("", "!"):
+                        name = "%s%s.%d:%s" % (pre, self.aedt_version_string, d, pid)
+                        tried.append(name)
+                        try:
+                            mk = pythoncom.CreateItemMoniker("!", name[len(pre):] if pre else name)
+                            obj = rot0.GetObject(mk)
+                        except Exception:
+                            continue
+                        self.odesktop = win32_client.Dispatch(obj.QueryInterface(pythoncom.IID_IDispatch))
+                        self.is_grpc_api = False
+                        wd.cancel()
+                        print("attached to AEDT pid %s by direct moniker lookup (%s)" % (pid, name), flush=True)
+                        return
+            print("direct moniker lookup found nothing (%d names tried, e.g. %s)" % (len(tried), tried[:1]), flush=True)
+        except Exception as e:
+            last = e
+            print("direct moniker lookup failed (%r)" % (e,), flush=True)
         for k in range(tries):
             try:
                 sess = com_active_sessions(self.aedt_version_id, self.student_version, self.non_graphical)
