@@ -1,0 +1,97 @@
+{
+  "design": {
+    "N": {
+      "mm": 7.0,
+      "src": "paper"
+    },
+    "Bl": {
+      "mm": 136.77,
+      "src": "paper"
+    },
+    "Bw": {
+      "mm": 75.22,
+      "src": "paper"
+    },
+    "Lcon": {
+      "mm": 14.36,
+      "src": "paper"
+    },
+    "Lr1": {
+      "mm": 25.3,
+      "src": "paper"
+    },
+    "Gnd": {
+      "mm": 18.46,
+      "src": "paper"
+    },
+    "Lms": {
+      "mm": 36.24,
+      "src": "paper"
+    },
+    "Wcon": {
+      "mm": 8.21,
+      "src": "paper"
+    },
+    "Wrad": {
+      "mm": 5.47,
+      "src": "paper"
+    },
+    "S": {
+      "mm": 0.92,
+      "src": "paper"
+    },
+    "Lstub": {
+      "mm": 9.68,
+      "src": "paper"
+    },
+    "Pstub": {
+      "mm": 38.98,
+      "src": "paper"
+    },
+    "Wms": {
+      "mm": 3.8386,
+      "src": "derived"
+    },
+    "t": {
+      "mm": 0.035,
+      "src": "derived"
+    }
+  },
+  "aux": {
+    "geometry": {
+      "N": 7,
+      "e": [
+        33.510000000000005,
+        30.829200000000007,
+        28.362864000000005,
+        26.093834880000006
+      ],
+      "y": [
+        38.975,
+        53.335,
+        67.695,
+        82.055,
+        96.41499999999999,
+        110.775,
+        125.13499999999999
+      ],
+      "depth": [
+        33.510000000000005,
+        33.510000000000005,
+        30.829200000000007,
+        30.829200000000007,
+        28.362864000000005,
+        28.362864000000005,
+        26.093834880000006
+      ]
+    },
+    "L_eq": 67.02000000000001,
+    "warnings": [
+      "50 ohm microstrip width not stated: Hammerstad gives 3.839 mm for er=3.0, h=1.527",
+      "copper thickness 35 um assumed",
+      "meander rail depths (one lower rail per pair of radiators, scaled by S per pair) are read from the paper's Fig. 11, not stated numerically; the text states only Lr_n = S*Lr_(n-1)",
+      "stub position convention (left edge, measured from the right edge of radiator 1) is read from Fig. 6b",
+      "SMA connector not modelled: ideal 50 ohm lumped port at the board edge between strip and ground"
+    ]
+  }
+}

@@ -1,0 +1,47 @@
+name: gad_meander_1.795GHz_s100
+family: meander
+f0_ghz: 1.795
+z0_ohm: 50.0
+substrate:
+  name: RO3003
+  er: 3.0
+  tan_d: 0.001
+  h_mm: 1.527
+dims_mm:
+  N: 7.0
+  Bl: 136.77
+  Bw: 75.22
+  Lcon: 14.36
+  Lr1: 25.3
+  Gnd: 18.46
+  Lms: 36.24
+  Wcon: 8.21
+  Wrad: 5.47
+  S: 0.92
+  Lstub: 9.68
+  Pstub: 38.98
+reported:
+  f0_ghz: null
+  s11_min_db: null
+  bw_mhz: null
+  gain_dbi: null
+source_pages:
+- 2
+- 4
+- 5
+- 6
+confidence: 0.8
+missing: []
+notes: Gad & Sallam meander scaled by s=1.3677 (= 2.455/1.795 x 1.0) on the same RO3003
+  board; no matching network; NOT solver-verified until simulated
+enclosure: null
+sma: null
+cell_mm: 2.0
+fields_ghz:
+- 1.71
+- 1.795
+- 1.88
+sweep_ghz:
+- 1.5
+- 2.1
+unsupported_reason: ''

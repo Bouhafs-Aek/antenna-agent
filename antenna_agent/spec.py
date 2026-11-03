@@ -7,7 +7,7 @@ from typing import Literal, Optional
 import yaml
 from pydantic import BaseModel, Field
 
-Family = Literal["rect_patch", "dipole", "monopole", "printed_yagi", "meander"]
+Family = Literal["rect_patch", "dipole", "monopole", "printed_yagi", "meander", "ifa_meander"]
 
 # Dimension keys (mm) the extractor may fill, per family. Anything absent is derived by design.py.
 DIM_KEYS = {
@@ -44,8 +44,23 @@ DIM_KEYS = {
         "Lr1": "first radiator length, strip centre line to inner edge of the lower connector",
         "Gnd": "truncated ground length at the feed edge", "Lms": "microstrip length to the left edge of radiator 1",
         "Wcon": "connector width (along x)", "Wrad": "radiator width (along y)", "S": "scale factor L(n)=S*L(n-1), no unit",
+        "scw": "slot width in each connector (mm, 0 = none)", "scl": "connector slot length / free connector length (0..0.9)",
+        "Wt1": "matching section 1 width (mm, at the port side, 0 = none)", "Lt1": "matching section 1 length",
+        "Wt2": "matching section 2 width (mm, next to the radiator side)", "Lt2": "matching section 2 length",
+        "srw": "slot width in each radiator (mm, 0 = none)", "srl": "radiator slot length / free radiator span (0..0.9)",
         "Lstub": "length of each of the two stubs beyond the microstrip edge", "Pstub": "stub left edge to right edge of radiator 1",
         "Wms": "50 ohm microstrip width (derived if absent)", "t": "copper thickness (derived if absent)",
+    },
+    "ifa_meander": {
+        "L1": "open-end vertical arm length", "L2": "length of the two small top bars", "L3": "length of the first (long) top bar",
+        "L4": "meander vertical length between top and bottom bars", "L5": "gap between the two verticals of a bottom bar",
+        "L6": "length of the feed/short strips from the ground edge to the first top bar",
+        "W1": "width of the grounded (short) strip", "W2": "trace width of everything else",
+        "D1": "left board edge to the short strip", "D2": "top bars to the board top edge", "D3": "last bar to the board right edge",
+        "D4": "short strip extension past the ground edge (via pad)", "D5": "gap short strip to feed strip",
+        "D6": "gap feed strip to the first meander vertical",
+        "Gw": "ground/substrate width (x)", "Gl": "ground/substrate length below the antenna edge (y)",
+        "t": "copper thickness", "via_d": "via diameter", "feed_ext": "feed strip extension past the ground edge (port plane)",
     },
     "monopole": {
         "L": "wire height above ground plane",
@@ -62,6 +77,28 @@ class Substrate(BaseModel):
     er: float
     tan_d: float = 0.0
     h_mm: float
+
+
+class Enclosure(BaseModel):
+    """Plastic housing around the PCB: a closed shell of wall thickness t_mm, air gap gap_mm to the board sides/ends and
+    gap_z_mm above/below it. Material values are typical datasheet numbers: check yours."""
+    name: str = "plastic"
+    er: float
+    tan_d: float = 0.0
+    t_mm: float = 2.5
+    gap_mm: float = 5.0
+    gap_z_mm: float = 5.0
+
+
+class SMA(BaseModel):
+    """End-launch SMA, modelled as a coax along -y that ends in a wave port: centre pin on the strip, outer shell tied to the
+    bottom ground. Defaults = standard SMA (pin 1.27 mm, PTFE 4.1 mm, thread 6.35 mm): Z0 = 48.9 ohm."""
+    pin_d: float = 1.27
+    ptfe_d: float = 4.1
+    shell_od: float = 6.35
+    ptfe_er: float = 2.1
+    out_mm: float = 8.0      # coax length beyond the housing wall (or beyond the board edge when there is no housing)
+    free_mm: float = 10.0    # coax length when there is no housing
 
 
 class Reported(BaseModel):
@@ -88,6 +125,9 @@ class AntennaSpec(BaseModel):
     confidence: float = Field(0.5, description="0..1 extractor confidence")
     missing: list[str] = Field(default_factory=list, description="Needed-but-absent items")
     notes: str = ""
+    enclosure: Optional[Enclosure] = None
+    sma: Optional[SMA] = None
+    cell_mm: float = Field(2.0, description="pixel size for cut-out optimisation (pixels.py)")
     fields_ghz: Optional[list[float]] = Field(None, description="equally spaced GHz points where far-field is saved")
     sweep_ghz: Optional[list[float]] = Field(None, description="[fstart, fstop] GHz; default f0 +/- 25 %")
     unsupported_reason: str = Field(
@@ -132,11 +172,18 @@ def missing_critical(spec: AntennaSpec) -> list[str]:
             out.append("substrate (er, tan_d, h_mm) required")
         if ("Lstub" in spec.dims_mm) != ("Pstub" in spec.dims_mm):
             out.append("meander stubs need both Lstub and Pstub")
+    if spec.family == "ifa_meander":
+        need = ["L1", "L2", "L3", "L4", "L5", "L6", "W1", "W2", "D1", "D2", "D3", "D4", "D5", "D6"]
+        gone = [k for k in need if k not in spec.dims_mm]
+        if gone:
+            out.append(f"ifa_meander needs dims_mm keys: {gone}")
+        if spec.substrate is None:
+            out.append("substrate (er, tan_d, h_mm) required (not in most antenna notes: state it as an assumption)")
     allowed = set(DIM_KEYS[spec.family])
     if spec.family == "printed_yagi":  # any number of directors: L{e}, W{e}, S{e-1}{e}, final gap S{E}{E+1}
         E = yagi_last_element(spec.dims_mm)
         allowed |= {f"{c}{e}" for e in range(2, E + 2) for c in "LW"} | {f"S{e - 1}{e}" for e in range(2, E + 2)}
-    unknown = set(spec.dims_mm) - allowed
+    unknown = {k for k in set(spec.dims_mm) - allowed if not (spec.family == "meander" and k.startswith("cut_"))}
     if unknown:
         out.append(f"unknown dims_mm keys for {spec.family}: {sorted(unknown)}")
     return out

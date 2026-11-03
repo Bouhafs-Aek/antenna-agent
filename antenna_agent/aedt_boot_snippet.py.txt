@@ -1,0 +1,80 @@
+def _patch_rot_fallback():
+    """PyAEDT looks AEDT up in the Windows COM Running Object Table; EnumRunning() sometimes fails with E_OUTOFMEMORY (0x8007000E).
+    On that error, retry the lookup ourselves (the table usually becomes readable again within seconds)."""
+    try:
+        from ansys.aedt.core.desktop import Desktop as _D
+    except Exception:
+        return
+    orig = _D._Desktop__init_dotnet
+    def attach_retry(self, tries=15, wait=4):
+        import pythoncom, re, time
+        from ansys.aedt.core.generic.general_methods import com_active_sessions
+        from ansys.aedt.core.internal.clr_module import win32_client
+        last = None
+        for k in range(tries):
+            try:
+                sess = com_active_sessions(self.aedt_version_id, self.student_version, self.non_graphical)
+                if sess:
+                    ctx = pythoncom.CreateBindCtx(0)
+                    rot = pythoncom.GetRunningObjectTable()
+                    for m in rot.EnumRunning():
+                        if re.search(self.aedt_version_string[10:] + r"\.\d:" + str(sess[0]), m.GetDisplayName(ctx, m)):
+                            self.odesktop = win32_client.Dispatch(rot.GetObject(m).QueryInterface(pythoncom.IID_IDispatch))
+                            self.is_grpc_api = False
+                            print("attached to AEDT pid %s (try %d)" % (sess[0], k + 1), flush=True)
+                            return
+            except Exception as e:
+                last = e
+            print("COM table not readable yet (%r), retry %d/%d" % (last, k + 1, tries), flush=True)
+            time.sleep(wait)
+        raise RuntimeError("cannot attach to AEDT through the COM table: %r. Redemarre Windows ou deconnecte-toi." % (last,))
+    def safe(self):
+        try:
+            return orig(self)
+        except Exception as e:
+            if "EnumRunning" not in repr(e) and "-2147024882" not in repr(e) and "0x8007000E" not in repr(e).upper():
+                raise
+            print("ROT enumeration failed (%r); retrying the lookup." % (e,), flush=True)
+            return attach_retry(self)
+    _D._Desktop__init_dotnet = safe
+
+
+def rot_check():
+    """Windows COM Running Object Table must be enumerable, else PyAEDT cannot find the AEDT session (E_OUTOFMEMORY = table saturated)."""
+    try:
+        import pythoncom
+        pythoncom.CoInitialize()
+        n = sum(1 for _ in pythoncom.GetRunningObjectTable().EnumRunning())
+        print("COM table OK (%d entries)." % n, flush=True)
+        return True
+    except Exception as e:
+        print("COM TABLE SATURATED/BROKEN: %r" % (e,), flush=True)
+        print(">>> Redemarre Windows (ou ferme la session), ne lance PAS de kill force ensuite, puis relance le script.", flush=True)
+        return False
+
+
+def prelaunch_student(timeout=int(os.environ.get("AEDT_TIMEOUT", "300"))):
+    """Windows/COM Student: PyAEDT waits only 5 s after starting ansysedtsv.exe, then looks for the COM session.
+    If AEDT is slower, proc[0] raises IndexError. Start AEDT ourselves and wait until its COM session is registered."""
+    if os.environ.get("AEDT_COM", "0") != "1" or os.environ.get("AEDT_STUDENT", "0") != "1" or os.name != "nt":
+        return False
+    if not rot_check():
+        sys.exit(3)
+    import subprocess, time
+    from ansys.aedt.core.generic.general_methods import com_active_sessions
+    ver = VERSION or "2025.2"
+    if com_active_sessions(ver, True, False):
+        print("AEDT Student session already registered.", flush=True); return True
+    exe = Path(os.environ.get("ANSYSEMSV_ROOT252", "")) / "ansysedtsv.exe"
+    if not exe.exists():
+        print("ansysedtsv.exe not found:", exe, flush=True); return False
+    subprocess.Popen([str(exe)], creationflags=0x00000008)      # DETACHED_PROCESS
+    t0 = time.time()
+    while time.time() - t0 < timeout:
+        time.sleep(3)
+        if com_active_sessions(ver, True, False):
+            time.sleep(10)                                      # let the GUI finish loading
+            print("AEDT Student ready after %.0f s." % (time.time() - t0), flush=True); return True
+    print("AEDT Student did not register a COM session within %d s." % timeout, flush=True); return False
+
+

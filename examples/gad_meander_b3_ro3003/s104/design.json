@@ -1,0 +1,97 @@
+{
+  "design": {
+    "N": {
+      "mm": 7.0,
+      "src": "paper"
+    },
+    "Bl": {
+      "mm": 142.24,
+      "src": "paper"
+    },
+    "Bw": {
+      "mm": 78.23,
+      "src": "paper"
+    },
+    "Lcon": {
+      "mm": 14.94,
+      "src": "paper"
+    },
+    "Lr1": {
+      "mm": 26.31,
+      "src": "paper"
+    },
+    "Gnd": {
+      "mm": 19.2,
+      "src": "paper"
+    },
+    "Lms": {
+      "mm": 37.69,
+      "src": "paper"
+    },
+    "Wcon": {
+      "mm": 8.53,
+      "src": "paper"
+    },
+    "Wrad": {
+      "mm": 5.69,
+      "src": "paper"
+    },
+    "S": {
+      "mm": 0.92,
+      "src": "paper"
+    },
+    "Lstub": {
+      "mm": 10.07,
+      "src": "paper"
+    },
+    "Pstub": {
+      "mm": 40.54,
+      "src": "paper"
+    },
+    "Wms": {
+      "mm": 3.8386,
+      "src": "derived"
+    },
+    "t": {
+      "mm": 0.035,
+      "src": "derived"
+    }
+  },
+  "aux": {
+    "geometry": {
+      "N": 7,
+      "e": [
+        34.839999999999996,
+        32.0528,
+        29.488576,
+        27.129489919999997
+      ],
+      "y": [
+        40.535,
+        55.474999999999994,
+        70.41499999999999,
+        85.35499999999999,
+        100.29499999999999,
+        115.235,
+        130.175
+      ],
+      "depth": [
+        34.839999999999996,
+        34.839999999999996,
+        32.0528,
+        32.0528,
+        29.488576,
+        29.488576,
+        27.129489919999997
+      ]
+    },
+    "L_eq": 69.67999999999999,
+    "warnings": [
+      "50 ohm microstrip width not stated: Hammerstad gives 3.839 mm for er=3.0, h=1.527",
+      "copper thickness 35 um assumed",
+      "meander rail depths (one lower rail per pair of radiators, scaled by S per pair) are read from the paper's Fig. 11, not stated numerically; the text states only Lr_n = S*Lr_(n-1)",
+      "stub position convention (left edge, measured from the right edge of radiator 1) is read from Fig. 6b",
+      "SMA connector not modelled: ideal 50 ohm lumped port at the board edge between strip and ground"
+    ]
+  }
+}

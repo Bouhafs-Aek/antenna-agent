@@ -23,3 +23,18 @@ Gad, M. M., & Sallam, M. O. (2024). High gain antipodal meander line antenna for
 The paper is open access under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). The unmodified PDF is in
 `examples/gad_meander_replica/paper/`. Simulated numbers in this repository come from HFSS Student, not from the authors' data;
 published values quoted here (band, directivity, measured gain) are theirs.
+
+# Second reference: TI AN043 (IFA example)
+
+A. Andersen, *Small Size 2.4 GHz PCB antenna*, Texas Instruments Application Note AN043, SWRA117D, 2008.
+The antenna is TI's design (CC2511 USB dongle reference design). The PDF is not redistributed here.
+```bibtex
+@techreport{andersen2008an043,
+  author      = {Andersen, Audun},
+  title       = {Small Size 2.4 GHz PCB antenna},
+  institution = {Texas Instruments},
+  type        = {Application Note},
+  number      = {AN043 (SWRA117D)},
+  year        = {2008}
+}
+```

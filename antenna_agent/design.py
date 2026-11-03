@@ -36,7 +36,7 @@ class Design:
 
     def tunable(self) -> list[str]:
         """Parameters the solver loop may move: only those NOT stated in the paper."""
-        keys = {"rect_patch": ["L", "y0"], "dipole": ["L"], "monopole": ["L"], "printed_yagi": [], "meander": []}[self.spec.family]
+        keys = {"rect_patch": ["L", "y0"], "dipole": ["L"], "monopole": ["L"], "printed_yagi": [], "meander": [], "ifa_meander": []}[self.spec.family]
         return [k for k in keys if self.p[k].src != "paper"]
 
     def table(self) -> dict:
@@ -220,6 +220,64 @@ def design_meander(spec: AntennaSpec) -> Design:
     return Design(spec, pm, dict(geometry=g, L_eq=2 * g["e"][0], warnings=warn))
 
 
+def ifa_geometry(d: dict) -> dict:
+    """Meandered IFA of TI AN043 (SWRA117D) Fig. 3 / Table 1, antenna-local coordinates (mm): x from the left board edge,
+    y = 0 at the ground edge, y up. Returns rectangles (x0, x1, y0, y1) and the overall size."""
+    L1, L2, L3, L4, L5, L6 = (d[k] for k in ("L1", "L2", "L3", "L4", "L5", "L6"))
+    W1, W2, D1, D2, D3, D4, D5, D6 = (d[k] for k in ("W1", "W2", "D1", "D2", "D3", "D4", "D5", "D6"))
+    fe = d.get("feed_ext", D4)
+    yb0, yb1 = L6, L6 + W2                 # top bars
+    ylo = L6 - L4 - W2                     # bottom of the meander verticals / bottom bars
+    r = {}
+    r["short"] = (D1, D1 + W1, -D4, yb1)    # grounded strip (via pad at its foot)
+    xf0 = D1 + W1 + D5
+    r["feed"] = (xf0, xf0 + W2, -fe, yb1)
+    r["top1"] = (D1, D1 + L3, yb0, yb1)
+    v1 = (D1 + L3 - W2, D1 + L3)
+    r["v1"] = (*v1, ylo, yb1)
+    v2 = (v1[1] + L5, v1[1] + L5 + W2)
+    r["v2"] = (*v2, ylo, yb1)
+    r["bot1"] = (v1[0], v2[1], ylo, ylo + W2)
+    r["top2"] = (v2[0], v2[0] + L2, yb0, yb1)
+    v3 = (r["top2"][1] - W2, r["top2"][1])
+    r["v3"] = (*v3, ylo, yb1)
+    v4 = (v3[1] + L5, v3[1] + L5 + W2)
+    r["v4"] = (*v4, ylo, yb1)
+    r["bot2"] = (v3[0], v4[1], ylo, ylo + W2)
+    r["top3"] = (v4[0], v4[0] + L2, yb0, yb1)
+    r["tail"] = (r["top3"][1] - W2, r["top3"][1], L6 - L1, yb1)
+    width = r["top3"][1] + D3
+    height = yb1 + D2
+    return dict(rects=r, width=width, height=height, d6_check=(r["v1"][0] - r["feed"][1]), via_xy=(D1 + W1 / 2, -D4 / 2))
+
+
+def design_ifa_meander(spec: AntennaSpec) -> Design:
+    """Meandered inverted-F antenna with every antenna dimension from the paper. The PCB (substrate stack, ground size,
+    via, copper) is NOT in the paper: defaults are derived and flagged."""
+    d, s, pm, warn = spec.dims_mm, spec.substrate, {}, []
+    for k, v in d.items():
+        pm[k] = P(float(v), "paper")
+    defaults = {"t": (0.035, "copper thickness 35 um assumed"), "via_d": (0.3, "via diameter 0.3 mm assumed"),
+                "Gw": (20.0, "ground/substrate width 20 mm ASSUMED (not in the paper): the dongle PCB size matters for the match"),
+                "Gl": (45.0, "ground/substrate length 45 mm ASSUMED (not in the paper): the dongle PCB size matters for the match"),
+                "feed_ext": (d.get("D4", 0.5), "feed strip extended past the ground edge by D4 so the port sits over ground")}
+    for k, (v, msg) in defaults.items():
+        if k not in d:
+            pm[k] = P(float(v), "derived")
+            warn.append(msg)
+    g = ifa_geometry({k: v.v for k, v in pm.items()})
+    if abs(g["d6_check"] - pm["D6"].v) > 0.06:
+        warn.append(f"D6 inconsistent with D5 placement: feed-to-meander gap computes to {g['d6_check']:.2f} mm vs D6={pm['D6'].v}")
+    if pm["Gw"].v < g["width"]:
+        warn.append(f"ground width {pm['Gw'].v} mm is narrower than the antenna ({g['width']:.2f} mm)")
+    warn.append("substrate stack not in the paper: er/tan_d/h come from the spec (an assumption); ground is layer 2 (bottom), "
+                "absent under the antenna")
+    warn.append("measured results include the USB dongle board and test pins, the model only an assumed rectangular ground plane")
+    warn.append("feed: ideal 50 ohm lumped port between the feed strip end and the ground, no balun/matching network")
+    return Design(spec, pm, dict(geometry=g, warnings=warn))
+
+
 def make_design(spec: AntennaSpec) -> Design:
     return {"rect_patch": design_patch, "dipole": design_dipole, "monopole": design_monopole,
-            "printed_yagi": design_printed_yagi, "meander": design_meander}[spec.family](spec)
+            "printed_yagi": design_printed_yagi, "meander": design_meander,
+            "ifa_meander": design_ifa_meander}[spec.family](spec)
