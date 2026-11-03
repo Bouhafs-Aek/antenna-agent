@@ -28,12 +28,17 @@ resonance order (smaller s = higher frequency), and s100 matches the scaling pre
 | `sXXX/preview.png`, `design.json`, `RUN.md` | geometry preview, derived design, modelling assumptions |
 | `sXXX/results/` | `s11.csv`, `gain.csv`, `patterns.csv` from HFSS, and `report/report.html` (S11, VSWR, Zin, gain, patterns) |
 | `results_summary.txt` | one line per variant (`scripts/s11_summary.py`) |
-| `run_all.ps1` | re-run all four variants (`run_s135.ps1` for s135 only) |
+| `run_all.ps1` | simulate variants without results (s135), `-Force` = all four, `-Only s100,s104` = chosen ones; 4 automatic tries per variant |
 
 ## Re-run (Windows, HFSS Student)
+From the repo root, `PYTHONPATH` is set by the script (no `pip install -e .` needed):
 ```powershell
-.\examples\gad_meander_b3_ro3003\run_all.ps1
+.\examples\gad_meander_b3_ro3003\run_all.ps1            # variants without results (s135)
+.\examples\gad_meander_b3_ro3003\run_all.ps1 -Force     # all four
+.\examples\gad_meander_b3_ro3003\run_all.ps1 -Only s100,s104
 ```
+Connection to HFSS is the fragile part (Windows COM table). The script closes HFSS politely between cases, retries each variant up to 4 times,
+and stops a frozen attach after 60 s. If a variant still fails with HANG / "COM table": sign out of Windows, then `-Only <variant>`.
 Regenerate other bands: `py -3.12 scripts\scale_meander.py out_dir 1.795`.
 
 ## Next iteration: s135 (s = 1.35, board 74.3 x 135.0 mm) - to be simulated

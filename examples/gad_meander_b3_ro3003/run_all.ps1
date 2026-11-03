@@ -1,9 +1,17 @@
-# Simulate the 4 B3 variants (s135, s100, s096, s104) in HFSS Student, one after the other, then build the reports.
-# From the repo root:  .\examples\gad_meander_b3_ro3003\run_all.ps1      (about 10-20 min per variant)
-# Needs: py -3.12 -m pip install -e . pyaedt pywin32 ansys-pythonnet numpy matplotlib
-$env:ANSYSEMSV_ROOT252="C:\Program Files\ANSYS Inc\ANSYS Student\v252\AnsysEM"
-$env:AEDT_VERSION="2025.2"; $env:AEDT_STUDENT="1"; $env:AEDT_GUI="1"; $env:AEDT_COM="1"
+# Simulate the LTE B3 variants (RO3003) in HFSS Student and build the reports.
+#   .\examples\gad_meander_b3_ro3003\run_all.ps1                 -> variants that have no results yet (today: s135)
+#   .\examples\gad_meander_b3_ro3003\run_all.ps1 -Force          -> all four (s135 s100 s096 s104)
+#   .\examples\gad_meander_b3_ro3003\run_all.ps1 -Only s100,s104 -> chosen variants (re-simulated)
+# Run it from the repo root. Outputs: out_b3\<variant>\ (s11.csv gain.csv patterns.csv report\), summary in examples\...\my_results.txt
+# Needs: py -3.12 -m pip install pyaedt pywin32 ansys-pythonnet numpy matplotlib   (the repo itself needs no install: PYTHONPATH is set here)
+param([string[]]$Only, [switch]$Force, [int]$Tries = 4)
+$ErrorActionPreference = "Continue"
+$root = (Get-Location).Path
 $here = "examples\gad_meander_b3_ro3003"
+if (-not (Test-Path "$here\run_all.ps1")) { Write-Host "Run this from the repo root (the folder that contains 'examples')."; exit 1 }
+$env:PYTHONPATH = $root
+$env:ANSYSEMSV_ROOT252 = "C:\Program Files\ANSYS Inc\ANSYS Student\v252\AnsysEM"
+$env:AEDT_VERSION = "2025.2"; $env:AEDT_STUDENT = "1"; $env:AEDT_GUI = "1"; $env:AEDT_COM = "1"
 function Stop-Aedt {   # close politely first (a hard kill leaves entries in the Windows COM table)
   $p = Get-Process ansysedt*, ansyscl* -ErrorAction SilentlyContinue
   if ($p) {
@@ -13,20 +21,33 @@ function Stop-Aedt {   # close politely first (a hard kill leaves entries in the
     Start-Sleep 5
   }
 }
-Remove-Item "$here\my_results.txt" -ErrorAction SilentlyContinue
-foreach ($c in @(@{v="s135"; s=1.35}, @{v="s100"; s=1.3677}, @{v="s096"; s=1.3130}, @{v="s104"; s=1.4224})) {
+$all = @(@{v="s135"; s=1.35}, @{v="s100"; s=1.3677}, @{v="s096"; s=1.3130}, @{v="s104"; s=1.4224})
+$todo = @()
+foreach ($c in $all) {
+  if ($Only) { if ($Only -contains $c.v) { $todo += $c } }
+  elseif ($Force -or -not (Test-Path "$here\$($c.v)\results\s11.csv")) { $todo += $c }
+}
+if (-not $todo) { Write-Host "Nothing to do: every variant already has results (use -Force to re-simulate)."; exit 0 }
+Write-Host ("To simulate: " + (($todo | ForEach-Object { $_.v }) -join ", "))
+New-Item -ItemType Directory -Force -Path out_b3 | Out-Null
+$failed = @()
+foreach ($c in $todo) {
   $out = "out_b3\$($c.v)"
-  for ($try = 1; $try -le 2; $try++) {
+  $ok = $false
+  for ($try = 1; $try -le $Tries -and -not $ok; $try++) {
     Stop-Aedt
     Remove-Item "$out\*.lock", "$out\s11.csv" -Force -ErrorAction SilentlyContinue
-
-    Write-Host "=== $($c.v) (s=$($c.s)) try $try ==="
+    Write-Host "=== $($c.v) (s=$($c.s)) try $try/$Tries ==="
     py -3.12 -u "$here\$($c.v)\initial\hfss_build.py" $out 2>&1 | Tee-Object -FilePath "out_b3\run_log_$($c.v).txt"
-    if (Test-Path "$out\s11.csv") { break }
+    $ok = Test-Path "$out\s11.csv"
   }
-  if (Test-Path "$out\s11.csv") {
+  if ($ok) {
     py -3.12 scripts\s11_summary.py $out $c.v $c.s | Tee-Object -FilePath "$here\my_results.txt" -Append
     py -3.12 scripts\analyse.py $out --band 1.71 1.88
-  } else { Write-Host "$($c.v): no result, read out_b3\run_log_$($c.v).txt" }
+  } else {
+    $failed += $c.v
+    Write-Host "$($c.v): FAILED after $Tries tries -> read out_b3\run_log_$($c.v).txt ; if it says HANG or 'COM table', sign out of Windows and run again with -Only $($c.v)"
+  }
 }
 Stop-Aedt
+if ($failed) { Write-Host ("Not done: " + ($failed -join ", ")) } else { Write-Host "All requested variants done. Send out_b3\<variant>\s11.csv and gain.csv." }
