@@ -19,6 +19,7 @@ foreach ($c in @(@{v="s135"; s=1.35})) {
   for ($try = 1; $try -le 2; $try++) {
     Stop-Aedt
     Remove-Item "$out\*.lock", "$out\s11.csv" -Force -ErrorAction SilentlyContinue
+    if ($try -eq 2) { $env:ANTENNA_ATTACH = "progid" } else { Remove-Item Env:\ANTENNA_ATTACH -ErrorAction SilentlyContinue }
     Write-Host "=== $($c.v) (s=$($c.s)) try $try ==="
     py -3.12 -u "$here\$($c.v)\initial\hfss_build.py" $out 2>&1 | Tee-Object -FilePath "out_b3\run_log_$($c.v).txt"
     if (Test-Path "$out\s11.csv") { break }
@@ -29,3 +30,4 @@ foreach ($c in @(@{v="s135"; s=1.35})) {
   } else { Write-Host "$($c.v): no result, read out_b3\run_log_$($c.v).txt" }
 }
 Stop-Aedt
+Remove-Item Env:\ANTENNA_ATTACH -ErrorAction SilentlyContinue

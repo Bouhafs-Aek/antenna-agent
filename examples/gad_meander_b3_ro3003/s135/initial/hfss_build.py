@@ -41,22 +41,23 @@ def _patch_rot_fallback():
         from ansys.aedt.core.generic.general_methods import com_active_sessions
         from ansys.aedt.core.internal.clr_module import win32_client
         def _hang():
-            print("HANG: attaching to AEDT took more than 90 s (COM table). Close HFSS, sign out of Windows, run again.", flush=True)
+            print("HANG: attaching to AEDT took more than 60 s (COM table).", flush=True)
             os._exit(5)
-        wd = threading.Timer(90, _hang); wd.daemon = True; wd.start()
+        wd = threading.Timer(60, _hang); wd.daemon = True; wd.start()
         last = None
-        # 1) first choice: PyAEDT's own no-enumeration path (COM ProgID); the table read below can freeze
-        try:
-            self._Desktop__dispatch_win32(self.aedt_version_string)
-            if self.odesktop is not None:
-                self.is_grpc_api = False
-                wd.cancel()
-                print("attached to AEDT through the COM ProgID (no table lookup)", flush=True)
-                return
-        except Exception as e:
-            last = e
-            print("ProgID attach failed (%r); trying the COM table." % (e,), flush=True)
-        # 2) last resort: read the table again
+        # ANTENNA_ATTACH=progid (set by the run script on its 2nd try) uses PyAEDT's no-enumeration path (COM ProgID) first.
+        # Default: the COM-table path that worked before; the ProgID path is only a fallback.
+        if os.environ.get("ANTENNA_ATTACH") == "progid":
+            try:
+                self._Desktop__dispatch_win32(self.aedt_version_string)
+                if self.odesktop is not None:
+                    self.is_grpc_api = False
+                    wd.cancel()
+                    print("attached to AEDT through the COM ProgID (no table lookup)", flush=True)
+                    return
+            except Exception as e:
+                last = e
+                print("ProgID attach failed (%r); trying the COM table." % (e,), flush=True)
         for k in range(tries):
             try:
                 sess = com_active_sessions(self.aedt_version_id, self.student_version, self.non_graphical)
