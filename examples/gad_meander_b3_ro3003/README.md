@@ -35,3 +35,11 @@ resonance order (smaller s = higher frequency), and s100 matches the scaling pre
 .\examples\gad_meander_b3_ro3003\run_all.ps1
 ```
 Regenerate other bands: `py -3.12 scripts\scale_meander.py out_dir 1.795`.
+
+## Next iteration: s135 (s = 1.35, board 74.3 x 135.0 mm) - to be simulated
+Between s096 and s100 to gain margin at the top of the band (s100 worst point: -10.1 dB at 1.878 GHz). Expected from 1/s scaling
+only (a prediction, not a result): f_res about 1.82 GHz. No S11 or gain is claimed until simulated.
+```powershell
+.\examples\gad_meander_b3_ro3003\run_s135.ps1
+```
+Then send `out_b3\s135\s11.csv` and `gain.csv`.

@@ -1,0 +1,97 @@
+{
+  "design": {
+    "N": {
+      "mm": 7.0,
+      "src": "paper"
+    },
+    "Bl": {
+      "mm": 135.0,
+      "src": "paper"
+    },
+    "Bw": {
+      "mm": 74.25,
+      "src": "paper"
+    },
+    "Lcon": {
+      "mm": 14.18,
+      "src": "paper"
+    },
+    "Lr1": {
+      "mm": 24.98,
+      "src": "paper"
+    },
+    "Gnd": {
+      "mm": 18.23,
+      "src": "paper"
+    },
+    "Lms": {
+      "mm": 35.78,
+      "src": "paper"
+    },
+    "Wcon": {
+      "mm": 8.1,
+      "src": "paper"
+    },
+    "Wrad": {
+      "mm": 5.4,
+      "src": "paper"
+    },
+    "S": {
+      "mm": 0.92,
+      "src": "paper"
+    },
+    "Lstub": {
+      "mm": 9.56,
+      "src": "paper"
+    },
+    "Pstub": {
+      "mm": 38.48,
+      "src": "paper"
+    },
+    "Wms": {
+      "mm": 3.8386,
+      "src": "derived"
+    },
+    "t": {
+      "mm": 0.035,
+      "src": "derived"
+    }
+  },
+  "aux": {
+    "geometry": {
+      "N": 7,
+      "e": [
+        33.08,
+        30.4336,
+        27.998912,
+        25.75899904
+      ],
+      "y": [
+        38.480000000000004,
+        52.660000000000004,
+        66.84,
+        81.02000000000001,
+        95.2,
+        109.38000000000001,
+        123.56
+      ],
+      "depth": [
+        33.08,
+        33.08,
+        30.4336,
+        30.4336,
+        27.998912,
+        27.998912,
+        25.75899904
+      ]
+    },
+    "L_eq": 66.16,
+    "warnings": [
+      "50 ohm microstrip width not stated: Hammerstad gives 3.839 mm for er=3.0, h=1.527",
+      "copper thickness 35 um assumed",
+      "meander rail depths (one lower rail per pair of radiators, scaled by S per pair) are read from the paper's Fig. 11, not stated numerically; the text states only Lr_n = S*Lr_(n-1)",
+      "stub position convention (left edge, measured from the right edge of radiator 1) is read from Fig. 6b",
+      "SMA connector not modelled: ideal 50 ohm lumped port at the board edge between strip and ground"
+    ]
+  }
+}
