@@ -37,10 +37,26 @@ def _patch_rot_fallback():
         return
     orig = _D._Desktop__init_dotnet
     def attach_retry(self, tries=15, wait=4):
-        import pythoncom, re, time
+        import os, threading, pythoncom, re, time
         from ansys.aedt.core.generic.general_methods import com_active_sessions
         from ansys.aedt.core.internal.clr_module import win32_client
+        def _hang():
+            print("HANG: attaching to AEDT took more than 90 s (COM table). Close HFSS, sign out of Windows, run again.", flush=True)
+            os._exit(5)
+        wd = threading.Timer(90, _hang); wd.daemon = True; wd.start()
         last = None
+        # 1) first choice: PyAEDT's own no-enumeration path (COM ProgID); the table read below can freeze
+        try:
+            self._Desktop__dispatch_win32(self.aedt_version_string)
+            if self.odesktop is not None:
+                self.is_grpc_api = False
+                wd.cancel()
+                print("attached to AEDT through the COM ProgID (no table lookup)", flush=True)
+                return
+        except Exception as e:
+            last = e
+            print("ProgID attach failed (%r); trying the COM table." % (e,), flush=True)
+        # 2) last resort: read the table again
         for k in range(tries):
             try:
                 sess = com_active_sessions(self.aedt_version_id, self.student_version, self.non_graphical)
@@ -51,22 +67,15 @@ def _patch_rot_fallback():
                         if re.search(self.aedt_version_string[10:] + r"\.\d:" + str(sess[0]), m.GetDisplayName(ctx, m)):
                             self.odesktop = win32_client.Dispatch(rot.GetObject(m).QueryInterface(pythoncom.IID_IDispatch))
                             self.is_grpc_api = False
+                            wd.cancel()
                             print("attached to AEDT pid %s (try %d)" % (sess[0], k + 1), flush=True)
                             return
             except Exception as e:
                 last = e
-            if k >= 1 and sess:  # table still unreadable: use PyAEDT's own no-enumeration path (COM ProgID, as it does for several sessions)
-                try:
-                    self._Desktop__dispatch_win32(self.aedt_version_string)
-                    if self.odesktop is not None:
-                        self.is_grpc_api = False
-                        print("attached to AEDT through the COM ProgID (no table lookup), try %d" % (k + 1), flush=True)
-                        return
-                except Exception as e2:
-                    last = e2
             print("COM table not readable yet (%r), retry %d/%d" % (last, k + 1, tries), flush=True)
             time.sleep(wait)
-        raise RuntimeError("cannot attach to AEDT through the COM table: %r. Redemarre Windows ou deconnecte-toi." % (last,))
+        wd.cancel()
+        raise RuntimeError("cannot attach to AEDT through the COM table: %r. Sign out of Windows and run again." % (last,))
     def safe(self):
         try:
             return orig(self)
