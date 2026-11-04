@@ -40,7 +40,7 @@ foreach ($c in $todo) {
     Write-Host "=== $($c.v) (s=$($c.s)) try $try/$Tries ==="
     py -3.12 -u "$here\$($c.v)\initial\hfss_build.py" $out 2>&1 | Tee-Object -FilePath "out_b3\run_log_$($c.v).txt"
     $ok = Test-Path "$out\s11.csv"
-    if (-not $ok -and (Test-Path "$out\solver_failed.txt")) { Write-Host "SOLVER FAILED (not a connection problem): no retry. Send $out\solver_messages.txt and $out\validation.txt"; break }
+    if (-not $ok -and (Test-Path "$out\solver_failed.txt")) { Write-Host "HFSS solver failed on this try (intermittent: b3_matched failed once, then solved). Messages kept in $out\solver_messages_try$try.txt; retrying."; Copy-Item "$out\solver_messages.txt" "$out\solver_messages_try$try.txt" -Force -ErrorAction SilentlyContinue }
   }
   if ($ok) {
     py -3.12 scripts\s11_summary.py $out $c.v $c.s | Tee-Object -FilePath "$here\my_results.txt" -Append
