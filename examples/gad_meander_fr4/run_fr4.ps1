@@ -43,10 +43,11 @@ foreach ($c in $todo) {
   $name = "$($c[0])_$($c[1])"; $out = "out_fr4\$name"; $ok = $false
   for ($try = 1; $try -le $Tries -and -not $ok; $try++) {
     Stop-Aedt
-    Remove-Item "$out\*.lock", "$out\s11.csv" -Force -ErrorAction SilentlyContinue
+    Remove-Item "$out\*.lock", "$out\s11.csv", "$out\solver_failed.txt" -Force -ErrorAction SilentlyContinue
     Write-Host "=== $name (s=$($c[2])) try $try/$Tries ==="
     py -3.12 -u "$here\$($c[0])\$($c[1])\initial\hfss_build.py" $out 2>&1 | Tee-Object -FilePath "out_fr4\run_log_$name.txt"
     $ok = Test-Path "$out\s11.csv"
+    if (-not $ok -and (Test-Path "$out\solver_failed.txt")) { Write-Host "SOLVER FAILED (not a connection problem): no retry. Send $out\solver_messages.txt and $out\validation.txt"; break }
   }
   if ($ok) {
     py -3.12 scripts\s11_summary.py $out $name $c[2] $c[3] | Tee-Object -FilePath "$here\my_results.txt" -Append

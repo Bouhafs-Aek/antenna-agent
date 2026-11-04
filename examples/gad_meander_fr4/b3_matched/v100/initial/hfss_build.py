@@ -231,8 +231,29 @@ try:
             return list(sd.get_expression_data(expression=expr, formula=kind)[1])
         return list(sd.data_real(expr) if kind == "real" else sd.data_imag(expr))
 
+    def _diagnose(why):
+        """The solve failed: save HFSS's own messages and a validation check next to the project, then stop with a clear error."""
+        msgs = []
+        for kw in ({"aedt_messages": True}, {}):
+            try:
+                msgs = [str(x) for x in hfss.logger.get_messages(hfss.project_name, hfss.design_name, 0, **kw)]
+            except Exception as _e:
+                msgs = ["get_messages failed: %r" % (_e,)]
+            if len(msgs) > 1:
+                break
+        try:
+            val = hfss.validate_simple(str(OUT / "validation.txt"))
+        except Exception as _e:
+            val = "validate_simple failed: %r" % (_e,)
+        (OUT / "solver_messages.txt").write_text("\n".join(msgs) + "\n\nvalidate_simple -> %s\n" % (val,), encoding="utf-8")
+        (OUT / "solver_failed.txt").write_text(why + "\nSee solver_messages.txt and validation.txt in this folder.\n", encoding="utf-8")
+        print("SOLVER FAILED: " + why + " -> messages saved in " + str(OUT / "solver_messages.txt"), flush=True)
+        raise RuntimeError(why)
+
     setup_sweep = f"Setup1 : {sweep.name}"
     sol = hfss.post.get_solution_data(expressions=["S(1,1)"], setup_sweep_name=setup_sweep)
+    if not sol:
+        _diagnose("no S11 solution data after Setup1 (the HFSS solve failed)")
     unit = (getattr(sol, "units_sweeps", {}) or {}).get("Freq") or "GHz"
     scale = {"Hz": 1e-9, "kHz": 1e-6, "MHz": 1e-3, "GHz": 1.0}[unit]
     f = [x * scale for x in sol.primary_sweep_values]
