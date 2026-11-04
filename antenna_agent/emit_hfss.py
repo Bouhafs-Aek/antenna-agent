@@ -73,7 +73,14 @@ FOOTER = '''
         msgs = []
         for kw in ({"aedt_messages": True}, {}):
             try:
-                msgs = [str(x) for x in hfss.logger.get_messages(hfss.project_name, hfss.design_name, 0, **kw)]
+                _ml = hfss.logger.get_messages(hfss.project_name, hfss.design_name, 0, **kw)
+                msgs = []
+                for _lvl in ("global_level", "project_level", "design_level", "error_level", "warning_level"):
+                    _v = getattr(_ml, _lvl, None)
+                    if _v:
+                        msgs += ["[%s] %s" % (_lvl, str(x)) for x in (_v if isinstance(_v, (list, tuple)) else [_v])]
+                if not msgs:
+                    msgs = [str(_ml)]
             except Exception as _e:
                 msgs = ["get_messages failed: %r" % (_e,)]
             if len(msgs) > 1:

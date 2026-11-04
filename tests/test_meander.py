@@ -137,3 +137,11 @@ def test_fr4_b3_final_cases_emit(tmp_path):
         assert d["dims_mm"]["S"] == 0.92 and (d["sma"] is not None) == has_sma
         run(None, str(tmp_path / case), "hfss", str(p), emit_only=True)
         assert "_diagnose" in (tmp_path / case / "initial" / "hfss_build.py").read_text()
+
+
+def test_fr4_sma_has_pec_backstop_and_matched_sma_emits(tmp_path):
+    from antenna_agent.agent import run
+    p = EX / "gad_meander_fr4" / "b3_matched_sma" / "specs" / "v100.yaml"
+    run(None, str(tmp_path), "hfss", str(p), emit_only=True)
+    t = (tmp_path / "initial" / "hfss_build.py").read_text()
+    assert "sma_cap" in t and "wave_port" in t

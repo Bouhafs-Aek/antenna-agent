@@ -409,6 +409,8 @@ def _meander(d, f0, fmin, fmax, npts, z0) -> Model:
         m.booleans.append(Bool("unite", "ms", ["sma_pin"]))
         add(B("sma_gtab", "pec", (-ro, y_start, zb0), (ro, 1.0, zb1)))
         bot += ["sma_shell", "sma_gtab"]
+        # PEC back-stop behind the coax wave port: HFSS wants an internal wave port backed by PEC on its opposite side (separate object, not united)
+        add(CylY("sma_cap", "pec", 0.0, zc, y_start - 1.0, y_start, ro))
     m.booleans.append(Bool("unite", "gnd", bot))
     if bt:
         m.booleans.append(Bool("subtract", "gnd", bt))

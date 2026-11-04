@@ -2,13 +2,14 @@
 #   .\examples\gad_meander_fr4\run_fr4.ps1 -Case b3_matched -> FR4 B3 with two matching sections on the feed (next step)
 #   .\examples\gad_meander_fr4\run_fr4.ps1 -Case b3_final      -> matched B3, frequency-corrected (x0.9777), ideal port
 #   .\examples\gad_meander_fr4\run_fr4.ps1 -Case b3_final_sma  -> same + SMA connector (the board to fabricate)
+#   .\examples\gad_meander_fr4\run_fr4.ps1 -Case b3_matched_sma -> RECOMMENDED fabrication candidate: b3_matched + SMA
 #   .\examples\gad_meander_fr4\run_fr4.ps1 -Case b3_sma    -> B3 WITH the SMA connector (after b3 / b3_matched work with the ideal port)
 #   .\examples\gad_meander_fr4\run_fr4.ps1                   -> every case without results (replica, b3, b3_sma: 9 runs)
 #   .\examples\gad_meander_fr4\run_fr4.ps1 -Case replica     -> only the paper replica on FR4 (2.45 GHz)
 #   .\examples\gad_meander_fr4\run_fr4.ps1 -Case b3 -Only v100
 # Run from the repo root. Outputs: out_fr4\<case>_<v>\ (s11.csv gain.csv patterns.csv report\), summary in examples\gad_meander_fr4\my_results.txt
 # Needs: py -3.12 -m pip install pyaedt pywin32 ansys-pythonnet numpy matplotlib
-param([ValidateSet("all","replica","b3","b3_sma","b3_matched","b3_final","b3_final_sma")][string]$Case = "all", [string[]]$Only, [switch]$Force, [int]$Tries = 4)
+param([ValidateSet("all","replica","b3","b3_sma","b3_matched","b3_final","b3_final_sma","b3_matched_sma")][string]$Case = "all", [string[]]$Only, [switch]$Force, [int]$Tries = 4)
 $ErrorActionPreference = "Continue"
 $root = (Get-Location).Path
 $here = "examples\gad_meander_fr4"
@@ -33,6 +34,7 @@ $cases += ,@("b3_matched","v100",1.2651,"1.795","1.71","1.88")
 foreach ($v in @(@("v100",1.2651),@("v096",1.2145),@("v104",1.3157))) { $cases += ,@("b3_sma",$v[0],$v[1],"1.795","1.71","1.88") }
 $cases += ,@("b3_final","v100",1.2369,"1.795","1.71","1.88")
 $cases += ,@("b3_final_sma","v100",1.2369,"1.795","1.71","1.88")
+$cases += ,@("b3_matched_sma","v100",1.2651,"1.795","1.71","1.88")
 $todo = @()
 foreach ($c in $cases) {
   if ($Case -ne "all" -and $c[0] -ne $Case) { continue }
@@ -51,6 +53,7 @@ foreach ($c in $todo) {
     Write-Host "=== $name (s=$($c[2])) try $try/$Tries ==="
     py -3.12 -u "$here\$($c[0])\$($c[1])\initial\hfss_build.py" $out 2>&1 | Tee-Object -FilePath "out_fr4\run_log_$name.txt"
     $ok = Test-Path "$out\s11.csv"
+    if (-not $ok -and (Test-Path "$out\validation.txt") -and (Select-String -Path "$out\validation.txt" -Pattern "\[error\]" -Quiet)) { Write-Host "HFSS VALIDATION ERROR (geometry/setup, retrying will not help): see $out\validation.txt"; break }
     if (-not $ok -and (Test-Path "$out\solver_failed.txt")) { Write-Host "HFSS solver failed on this try (intermittent: b3_matched failed once, then solved). Messages kept in $out\solver_messages_try$try.txt; retrying."; Copy-Item "$out\solver_messages.txt" "$out\solver_messages_try$try.txt" -Force -ErrorAction SilentlyContinue }
   }
   if ($ok) {

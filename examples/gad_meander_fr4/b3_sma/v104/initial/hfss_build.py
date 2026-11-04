@@ -204,6 +204,7 @@ try:
     hfss.modeler.create_cylinder("Y", [0.000000, -8.000000, 2.238500], 0.635000, 8.000000, num_sides=0, name="sma_pincut", material="pec")
     hfss.modeler.create_cylinder("Y", [0.000000, -8.000000, 2.238500], 0.635000, 9.500000, num_sides=0, name="sma_pin", material="pec")
     hfss.modeler.create_box([-3.175000, -8.000000, -0.035000], [6.350000, 9.000000, 0.035000], name="sma_gtab", material="pec")
+    hfss.modeler.create_cylinder("Y", [0.000000, -9.000000, 2.238500], 3.175000, 1.000000, num_sides=0, name="sma_cap", material="pec")
     hfss.modeler.create_box([-36.180000, 0.000000, 0.000000], [72.360000, 131.570000, 1.600000], name="substrate", material="sub_FR4")
     hfss.modeler.unite(['ms', 't_bar1', 't_bar2', 't_bar3', 't_bar4', 't_bar5', 't_bar6', 't_bar7', 't_tail', 't_con1', 't_con2', 't_con3', 't_con4', 't_con5', 't_con6', 'stub'])
     hfss.modeler.subtract("sma_shell", ['sma_cav'], keep_originals=False)
@@ -245,7 +246,14 @@ try:
         msgs = []
         for kw in ({"aedt_messages": True}, {}):
             try:
-                msgs = [str(x) for x in hfss.logger.get_messages(hfss.project_name, hfss.design_name, 0, **kw)]
+                _ml = hfss.logger.get_messages(hfss.project_name, hfss.design_name, 0, **kw)
+                msgs = []
+                for _lvl in ("global_level", "project_level", "design_level", "error_level", "warning_level"):
+                    _v = getattr(_ml, _lvl, None)
+                    if _v:
+                        msgs += ["[%s] %s" % (_lvl, str(x)) for x in (_v if isinstance(_v, (list, tuple)) else [_v])]
+                if not msgs:
+                    msgs = [str(_ml)]
             except Exception as _e:
                 msgs = ["get_messages failed: %r" % (_e,)]
             if len(msgs) > 1:
