@@ -6,7 +6,7 @@
 #   .\examples\gad_meander_fr4\run_fr4.ps1 -Case b3 -Only v100
 # Run from the repo root. Outputs: out_fr4\<case>_<v>\ (s11.csv gain.csv patterns.csv report\), summary in examples\gad_meander_fr4\my_results.txt
 # Needs: py -3.12 -m pip install pyaedt pywin32 ansys-pythonnet numpy matplotlib
-param([ValidateSet("all","replica","b3","b3_sma")][string]$Case = "all", [string[]]$Only, [switch]$Force, [int]$Tries = 4)
+param([ValidateSet("all","replica","b3","b3_sma","b3_matched")][string]$Case = "all", [string[]]$Only, [switch]$Force, [int]$Tries = 4)
 $ErrorActionPreference = "Continue"
 $root = (Get-Location).Path
 $here = "examples\gad_meander_fr4"
