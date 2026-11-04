@@ -26,9 +26,26 @@ This assumes the file set was the central case (v100) of the first batch; the CS
 The B3 case uses the same factor 0.925 on the B3 RO3003 scale 1.368 (one data point, extrapolated to another band: expect a few % error).
 No S11 or gain is claimed for iteration 2. Expect a narrower band and a lower gain than on RO3003 (tan d 0.02), and check radiation efficiency before quoting any gain.
 
+## B3 on FR4 with the SMA connector (`b3_sma/`, generated, NOT simulated)
+Same three B3 scales (1.215 / 1.265 / 1.316), now fed through an SMA end-launch (48.9 ohm coax, pin 1.27 mm, PTFE 4.1 mm, shell 6.35 mm,
+wave port 6 mm outside the board edge) instead of the ideal lumped port. This is the version that goes to fabrication, because the
+connector shifts the match. Generic SMA dimensions, **not a specific part**; never solved in HFSS Student before: if the script stops with
+"coax wave port failed", send `out_fr4\run_log_b3_sma_v100.txt`; if Student refuses the mesh (about 128k elements), shorten `out_mm`/`free_mm` in the spec.
+The ideal-port `b3/` cases are only a calibration step: run `b3_sma` directly to save time, and `b3` only if `b3_sma` misbehaves.
+
+## Path to fabrication (after the simulation)
+1. Simulate `b3_sma` (3 scales). Pick the scale whose -10 dB band covers 1.71-1.88 GHz; correct with `s_new = s * f_res / 1.795`, re-simulate once.
+2. Check radiation efficiency / gain in HFSS: FR4 (tan d 0.02) costs gain; decide if the loss is acceptable.
+3. Choose the real SMA part (PCB end-launch for 1.6 mm board), take its footprint from the datasheet (pad, ground tabs, clearance), put that footprint in the model, re-simulate.
+4. Board order: FR4 1.6 mm, 35 um copper, double sided, finish ENIG or HASL, controlled strip width +-0.05 mm; ask the fab for the real er (FR4 is 4.2-4.7, which moves the resonance by a few %).
+5. Export Gerber (top copper, bottom copper, outline, drill) from the final geometry; order 3 boards (the three scales or +-2 % around the best one).
+6. Measure S11 with a VNA (calibrated at the SMA plane) and compare with the simulation; trim the stub if the resonance is off.
+Steps 3 and 5 need the final connector choice: not done yet.
+
 ## Run (Windows, HFSS Student, from the repo root)
 ```powershell
-.\examples\gad_meander_fr4\run_fr4.ps1                  # 6 runs (replica + b3, 3 scales each)
+.\examples\gad_meander_fr4\run_fr4.ps1 -Case b3_sma    # B3 with the SMA connector (3 runs): do this next
+.\examples\gad_meander_fr4\run_fr4.ps1                  # all cases (9 runs)
 .\examples\gad_meander_fr4\run_fr4.ps1 -Case replica    # replica only
 .\examples\gad_meander_fr4\run_fr4.ps1 -Case b3 -Only v100
 ```

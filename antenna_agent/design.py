@@ -214,7 +214,10 @@ def design_meander(spec: AntennaSpec) -> Design:
     warn.append("meander rail depths (one lower rail per pair of radiators, scaled by S per pair) are read from the paper's "
                 "Fig. 11, not stated numerically; the text states only Lr_n = S*Lr_(n-1)")
     warn.append("stub position convention (left edge, measured from the right edge of radiator 1) is read from Fig. 6b")
-    warn.append("SMA connector not modelled: ideal 50 ohm lumped port at the board edge between strip and ground")
+    if getattr(spec, "sma", None) is not None:
+        warn.append("SMA end-launch modelled as a 48.9 ohm coax (generic dimensions, not a specific part) with a wave port; the real connector's footprint/pin must be checked against its datasheet before fabrication; not solver-verified")
+    else:
+        warn.append("SMA connector not modelled: ideal 50 ohm lumped port at the board edge between strip and ground")
     if not s.tan_d:
         warn.append("tan_d not given: 0 assumed")
     return Design(spec, pm, dict(geometry=g, L_eq=2 * g["e"][0], warnings=warn))

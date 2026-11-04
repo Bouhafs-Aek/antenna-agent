@@ -102,3 +102,10 @@ def test_fr4_cases_use_fr4_and_lambda_g_scale():
         assert sp.dims_mm["Lr1"] == pytest.approx(ro.dims_mm["Lr1"] * f_scale * k, abs=0.02)
         assert sp.dims_mm["N"] == 7 and sp.dims_mm["S"] == 0.92
         assert missing_critical(sp) == []
+
+
+def test_fr4_b3_sma_cases_emit_a_coax_port(tmp_path):
+    from antenna_agent.agent import run
+    run(None, str(tmp_path), "hfss", str(EX / "gad_meander_fr4" / "b3_sma" / "specs" / "v100.yaml"), emit_only=True)
+    s = (tmp_path / "initial" / "hfss_build.py").read_text()
+    assert "sma_shell" in s and "wave_port" in s
