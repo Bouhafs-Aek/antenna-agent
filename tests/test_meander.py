@@ -126,3 +126,13 @@ def test_match_adds_sections_in_series_keeps_original_feed():
     y = b["Lt1"] + b["Lt2"]
     for k in ("Lms", "Bl", "Gnd"):
         assert b[k] == pytest.approx(a[k] + y, abs=0.02)
+
+
+def test_fr4_b3_final_cases_emit(tmp_path):
+    import yaml
+    for case, has_sma in (("b3_final", False), ("b3_final_sma", True)):
+        p = EX / "gad_meander_fr4" / case / "specs" / "v100.yaml"
+        d = yaml.safe_load(open(p))
+        assert d["dims_mm"]["S"] == 0.92 and (d["sma"] is not None) == has_sma
+        run(None, str(tmp_path / case), "hfss", str(p), emit_only=True)
+        assert "_diagnose" in (tmp_path / case / "initial" / "hfss_build.py").read_text()

@@ -1,12 +1,14 @@
 # Simulate the FR4 versions of the meander in HFSS Student (FR4: er 4.4, tan d 0.02, h 1.6 mm).
 #   .\examples\gad_meander_fr4\run_fr4.ps1 -Case b3_matched -> FR4 B3 with two matching sections on the feed (next step)
+#   .\examples\gad_meander_fr4\run_fr4.ps1 -Case b3_final      -> matched B3, frequency-corrected (x0.9777), ideal port
+#   .\examples\gad_meander_fr4\run_fr4.ps1 -Case b3_final_sma  -> same + SMA connector (the board to fabricate)
 #   .\examples\gad_meander_fr4\run_fr4.ps1 -Case b3_sma    -> B3 WITH the SMA connector (after b3 / b3_matched work with the ideal port)
 #   .\examples\gad_meander_fr4\run_fr4.ps1                   -> every case without results (replica, b3, b3_sma: 9 runs)
 #   .\examples\gad_meander_fr4\run_fr4.ps1 -Case replica     -> only the paper replica on FR4 (2.45 GHz)
 #   .\examples\gad_meander_fr4\run_fr4.ps1 -Case b3 -Only v100
 # Run from the repo root. Outputs: out_fr4\<case>_<v>\ (s11.csv gain.csv patterns.csv report\), summary in examples\gad_meander_fr4\my_results.txt
 # Needs: py -3.12 -m pip install pyaedt pywin32 ansys-pythonnet numpy matplotlib
-param([ValidateSet("all","replica","b3","b3_sma","b3_matched")][string]$Case = "all", [string[]]$Only, [switch]$Force, [int]$Tries = 4)
+param([ValidateSet("all","replica","b3","b3_sma","b3_matched","b3_final","b3_final_sma")][string]$Case = "all", [string[]]$Only, [switch]$Force, [int]$Tries = 4)
 $ErrorActionPreference = "Continue"
 $root = (Get-Location).Path
 $here = "examples\gad_meander_fr4"
@@ -29,6 +31,8 @@ foreach ($v in @(@("v100",0.9250),@("v096",0.8880),@("v104",0.9620))) { $cases +
 foreach ($v in @(@("v100",1.2651),@("v096",1.2145),@("v104",1.3157))) { $cases += ,@("b3",$v[0],$v[1],"1.795","1.71","1.88") }
 $cases += ,@("b3_matched","v100",1.2651,"1.795","1.71","1.88")
 foreach ($v in @(@("v100",1.2651),@("v096",1.2145),@("v104",1.3157))) { $cases += ,@("b3_sma",$v[0],$v[1],"1.795","1.71","1.88") }
+$cases += ,@("b3_final","v100",1.2369,"1.795","1.71","1.88")
+$cases += ,@("b3_final_sma","v100",1.2369,"1.795","1.71","1.88")
 $todo = @()
 foreach ($c in $cases) {
   if ($Case -ne "all" -and $c[0] -ne $Case) { continue }

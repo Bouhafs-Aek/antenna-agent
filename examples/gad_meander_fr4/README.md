@@ -74,3 +74,7 @@ Steps 3 and 5 need the final connector choice: not done yet.
 ```
 Results go to `out_fr4\<case>_<v>\`, one summary line per run to `my_results.txt`
 (resonance, S11, Zin, -10 dB band, corrected scale `s_new = s * f_res / f_target`). Send the CSV files back, naming the case.
+
+
+## Iteration 2 result and next step
+`b3_matched` (HFSS, FR4): S11 min -24.0 dB at 1.755 GHz, -10 dB band 1.668-2.004 GHz (covers B3 1.71-1.88), gain 7.7/8.4/8.6 dBi. Next: `-Case b3_final` (all lengths x0.9777 to centre on 1.795 GHz, ideal port), then `-Case b3_final_sma` (same + SMA coax port; first time solved in HFSS Student, may hit the mesh limit).
