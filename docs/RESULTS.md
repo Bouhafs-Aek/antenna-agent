@@ -22,3 +22,5 @@ s100 covers B3 at S11 <= -10.1 dB over 1.71-1.88 GHz (board 75.2 x 136.8 mm). No
 ## 3. FR4 (er 4.4, tan d 0.02, h 1.6 mm)
 Iteration 1 (replica on FR4, guided-wavelength scale 0.852, simulated): f_res 2.661 GHz instead of 2.45, S11 min -11.2 dB, Zin 22 - j31 ohm at 2.45 GHz, usable band 2.62-2.70 GHz only, gain 4.5 / 7.8 / 9.2 dBi at 2.2 / 2.45 / 2.7 GHz.
 Corrected scale 0.925. Iteration 2 (replica and B3, three scales each) is generated and not simulated: `examples/gad_meander_fr4/`.
+
+FR4 B3 (ideal port, scale 1.265, simulated): f_res 1.823 GHz, S11 min -7.8 dB, no -10 dB band, Zin 23 - j18 ohm, gain 8.0 / 8.8 / 9.0 dBi. Two matching sections predicted to bring the worst S11 from -4.9 to -16.5 dB (ideal lines); generated in `examples/gad_meander_fr4/b3_matched/`, not simulated.

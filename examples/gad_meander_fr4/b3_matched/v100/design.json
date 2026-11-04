@@ -1,0 +1,113 @@
+{
+  "design": {
+    "N": {
+      "mm": 7.0,
+      "src": "paper"
+    },
+    "Bl": {
+      "mm": 126.51,
+      "src": "paper"
+    },
+    "Bw": {
+      "mm": 69.58,
+      "src": "paper"
+    },
+    "Lcon": {
+      "mm": 13.28,
+      "src": "paper"
+    },
+    "Lr1": {
+      "mm": 23.4,
+      "src": "paper"
+    },
+    "Gnd": {
+      "mm": 27.0,
+      "src": "paper"
+    },
+    "Lms": {
+      "mm": 33.53,
+      "src": "paper"
+    },
+    "Wcon": {
+      "mm": 7.59,
+      "src": "paper"
+    },
+    "Wrad": {
+      "mm": 5.06,
+      "src": "paper"
+    },
+    "S": {
+      "mm": 0.92,
+      "src": "paper"
+    },
+    "Lstub": {
+      "mm": 8.96,
+      "src": "paper"
+    },
+    "Pstub": {
+      "mm": 36.06,
+      "src": "paper"
+    },
+    "Wt1": {
+      "mm": 6.161,
+      "src": "paper"
+    },
+    "Lt1": {
+      "mm": 20.25,
+      "src": "paper"
+    },
+    "Wt2": {
+      "mm": 0.933,
+      "src": "paper"
+    },
+    "Lt2": {
+      "mm": 4.75,
+      "src": "paper"
+    },
+    "Wms": {
+      "mm": 3.059,
+      "src": "derived"
+    },
+    "t": {
+      "mm": 0.035,
+      "src": "derived"
+    }
+  },
+  "aux": {
+    "geometry": {
+      "N": 7,
+      "e": [
+        30.99,
+        28.5108,
+        26.229936,
+        24.13154112
+      ],
+      "y": [
+        36.06,
+        49.34,
+        62.620000000000005,
+        75.9,
+        89.18,
+        102.46,
+        115.74
+      ],
+      "depth": [
+        30.99,
+        30.99,
+        28.5108,
+        28.5108,
+        26.229936,
+        26.229936,
+        24.13154112
+      ]
+    },
+    "L_eq": 61.98,
+    "warnings": [
+      "50 ohm microstrip width not stated: Hammerstad gives 3.059 mm for er=4.4, h=1.6",
+      "copper thickness 35 um assumed",
+      "meander rail depths (one lower rail per pair of radiators, scaled by S per pair) are read from the paper's Fig. 11, not stated numerically; the text states only Lr_n = S*Lr_(n-1)",
+      "stub position convention (left edge, measured from the right edge of radiator 1) is read from Fig. 6b",
+      "SMA connector not modelled: ideal 50 ohm lumped port at the board edge between strip and ground"
+    ]
+  }
+}

@@ -26,6 +26,24 @@ This assumes the file set was the central case (v100) of the first batch; the CS
 The B3 case uses the same factor 0.925 on the B3 RO3003 scale 1.368 (one data point, extrapolated to another band: expect a few % error).
 No S11 or gain is claimed for iteration 2. Expect a narrower band and a lower gain than on RO3003 (tan d 0.02), and check radiation efficiency before quoting any gain.
 
+## FR4 B3, ideal port, no matching (`b3/v100`, simulated)
+Real HFSS results in `b3/v100/results/` (assumed to be the central scale 1.265: the CSV files carried no label).
+| Quantity | Result |
+|---|---|
+| f_res | 1.823 GHz (target 1.795, +1.6 %) |
+| S11 min | -7.8 dB; **no -10 dB band** |
+| S11 at 1.71 / 1.795 / 1.88 GHz | -4.9 / -7.3 / -6.1 dB (worst -4.9 dB at 1.71) |
+| Zin at 1.795 GHz | 23.2 - j18.4 ohm |
+| Gain at 1.71 / 1.795 / 1.88 GHz | 8.0 / 8.8 / 9.0 dBi (realised, mismatch included: 6.3 / 7.9 / 7.8) |
+Not matched: the radiation is fine (gain only about 0.6 dB below the RO3003 design, 9.1 / 9.4 / 9.8), the impedance is not.
+This is the same behaviour as the FR4 replica (Zin 29 - j25 ohm): FR4 shifts the impedance and scaling alone does not restore 50 ohm.
+
+## FR4 B3 with matching sections (`b3_matched/v100`, generated, NOT simulated)
+Two series microstrip sections on the feed, designed by `antenna-agent match` from the S11 above (ideal lines, discontinuities and
+coupling ignored): port side Zt 31.5 ohm (W 6.16 mm, L 20.25 mm), radiator side Zt 90 ohm (W 0.93 mm, L 4.75 mm); ground region lengthened to 27 mm.
+Prediction: worst S11 over 1.71-1.88 GHz **-4.9 -> -16.5 dB**. That is a transmission-line estimate: HFSS decides.
+The 0.93 mm line is 0.9 mm wide: check the fab's minimum trace width (standard 0.15 mm, so fine) and keep the 6.16 mm section clear of the SMA footprint.
+
 ## B3 on FR4 with the SMA connector (`b3_sma/`, generated, NOT simulated)
 Same three B3 scales (1.215 / 1.265 / 1.316), now fed through an SMA end-launch (48.9 ohm coax, pin 1.27 mm, PTFE 4.1 mm, shell 6.35 mm,
 wave port 6 mm outside the board edge) instead of the ideal lumped port. This is the version that goes to fabrication, because the

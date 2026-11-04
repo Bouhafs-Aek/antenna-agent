@@ -109,3 +109,11 @@ def test_fr4_b3_sma_cases_emit_a_coax_port(tmp_path):
     run(None, str(tmp_path), "hfss", str(EX / "gad_meander_fr4" / "b3_sma" / "specs" / "v100.yaml"), emit_only=True)
     s = (tmp_path / "initial" / "hfss_build.py").read_text()
     assert "sma_shell" in s and "wave_port" in s
+
+
+def test_fr4_b3_matched_spec_has_sections_and_emits(tmp_path):
+    from antenna_agent.agent import run
+    sp = load_spec(EX / "gad_meander_fr4" / "b3_matched" / "specs" / "v100.yaml")
+    assert sp.dims_mm["Wt1"] > 0 and sp.dims_mm["Lt1"] > 0 and sp.dims_mm["Wt2"] > 0 and sp.dims_mm["Lt2"] > 0
+    run(None, str(tmp_path), "hfss", str(EX / "gad_meander_fr4" / "b3_matched" / "specs" / "v100.yaml"), emit_only=True)
+    assert (tmp_path / "initial" / "hfss_build.py").exists()
