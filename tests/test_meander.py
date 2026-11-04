@@ -117,3 +117,12 @@ def test_fr4_b3_matched_spec_has_sections_and_emits(tmp_path):
     assert sp.dims_mm["Wt1"] > 0 and sp.dims_mm["Lt1"] > 0 and sp.dims_mm["Wt2"] > 0 and sp.dims_mm["Lt2"] > 0
     run(None, str(tmp_path), "hfss", str(EX / "gad_meander_fr4" / "b3_matched" / "specs" / "v100.yaml"), emit_only=True)
     assert (tmp_path / "initial" / "hfss_build.py").exists()
+
+
+def test_match_adds_sections_in_series_keeps_original_feed():
+    import yaml
+    a = yaml.safe_load(open(EX / "gad_meander_fr4" / "b3" / "specs" / "v100.yaml"))["dims_mm"]
+    b = yaml.safe_load(open(EX / "gad_meander_fr4" / "b3_matched" / "specs" / "v100.yaml"))["dims_mm"]
+    y = b["Lt1"] + b["Lt2"]
+    for k in ("Lms", "Bl", "Gnd"):
+        assert b[k] == pytest.approx(a[k] + y, abs=0.02)

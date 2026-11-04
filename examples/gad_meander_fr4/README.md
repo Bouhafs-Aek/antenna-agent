@@ -38,11 +38,16 @@ Real HFSS results in `b3/v100/results/` (assumed to be the central scale 1.265: 
 Not matched: the radiation is fine (gain only about 0.6 dB below the RO3003 design, 9.1 / 9.4 / 9.8), the impedance is not.
 This is the same behaviour as the FR4 replica (Zin 29 - j25 ohm): FR4 shifts the impedance and scaling alone does not restore 50 ohm.
 
-## FR4 B3 with matching sections (`b3_matched/v100`, generated, NOT simulated)
-Two series microstrip sections on the feed, designed by `antenna-agent match` from the S11 above (ideal lines, discontinuities and
-coupling ignored): port side Zt 31.5 ohm (W 6.16 mm, L 20.25 mm), radiator side Zt 90 ohm (W 0.93 mm, L 4.75 mm); ground region lengthened to 27 mm.
-Prediction: worst S11 over 1.71-1.88 GHz **-4.9 -> -16.5 dB**. That is a transmission-line estimate: HFSS decides.
-The 0.93 mm line is 0.9 mm wide: check the fab's minimum trace width (standard 0.15 mm, so fine) and keep the 6.16 mm section clear of the SMA footprint.
+## FR4 B3 with matching sections (`b3_matched`)
+Two series microstrip sections on the feed, designed by `antenna-agent match` from the unmatched S11 above (ideal lines, discontinuities and coupling ignored):
+port side Zt 31.5 ohm (W 6.16 mm, L 20.25 mm), radiator side Zt 90 ohm (W 0.93 mm, L 4.75 mm). Predicted worst S11 over 1.71-1.88 GHz: **-4.9 -> -16.5 dB**.
+
+**Iteration 1 (simulated, FAILED - my generator bug).** `b3_matched/iter1_sections_replaced/results/`: f_res 1.989 GHz, S11 in B3 only -2.3 / -3.4 / -7.5 dB
+(1.71 / 1.795 / 1.88 GHz), Zin 9.5 - j0.6 ohm at 1.795, realised gain 3.7 / 5.9 / 8.1 dBi. Cause: the generated board **replaced** the first 25 mm of the 50 ohm feed by the
+sections, while the prediction assumes they are **added** in series before the original feed. A transmission-line model of the replaced circuit gives -1.7 / -2.3 / -2.0 dB
+and a low-impedance load (5-7 - j11..14 ohm), the same behaviour as the HFSS result, while the "added" circuit gives -16.5 / -16.8 / -28 dB: the model is usable, the geometry was wrong.
+**Iteration 2 (generated, NOT simulated; `b3_matched/v100`).** `match` now lengthens the feed (Lms), the board (Bl) and the ground (Gnd) by the sections' total length (25 mm),
+so the original feed and stub keep their position relative to the radiator: board 69.6 x 151.5 mm. The prediction is still an ideal-line estimate; HFSS decides.
 
 ## B3 on FR4 with the SMA connector (`b3_sma/`, generated, NOT simulated)
 Same three B3 scales (1.215 / 1.265 / 1.316), now fed through an SMA end-launch (48.9 ohm coax, pin 1.27 mm, PTFE 4.1 mm, shell 6.35 mm,

@@ -9,12 +9,12 @@ substrate:
   h_mm: 1.6
 dims_mm:
   N: 7.0
-  Bl: 126.51
+  Bl: 151.51
   Bw: 69.58
   Lcon: 13.28
   Lr1: 23.4
-  Gnd: 27.0
-  Lms: 33.53
+  Gnd: 42.08
+  Lms: 58.53
   Wcon: 7.59
   Wrad: 5.06
   S: 0.92
