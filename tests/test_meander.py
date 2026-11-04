@@ -129,6 +129,7 @@ def test_match_adds_sections_in_series_keeps_original_feed():
 
 
 def test_fr4_b3_final_cases_emit(tmp_path):
+    from antenna_agent.agent import run
     import yaml
     for case, has_sma in (("b3_final", False), ("b3_final_sma", True)):
         p = EX / "gad_meander_fr4" / case / "specs" / "v100.yaml"
