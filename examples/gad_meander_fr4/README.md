@@ -38,6 +38,12 @@ Real HFSS results in `b3/v100/results/` (assumed to be the central scale 1.265: 
 Not matched: the radiation is fine (gain only about 0.6 dB below the RO3003 design, 9.1 / 9.4 / 9.8), the impedance is not.
 This is the same behaviour as the FR4 replica (Zin 29 - j25 ohm): FR4 shifts the impedance and scaling alone does not restore 50 ohm.
 
+## FR4 replica, s = 0.925 (`replica/v100`, simulated; summary numbers from the run log, CSV not archived)
+f_res 2.492 GHz (+1.7 % vs 2.45), S11 min -10.5 dB at 2.490 GHz, S11(2.45) = -9.7 dB, Zin(2.45) = 28 - j13 ohm, -10 dB band 2.460-2.520 GHz (60 MHz),
+worst S11 in 2.2-2.7 GHz -4.3 dB (at 2.7), max VSWR 4.14. Gain (HFSS, realised) at 2.2 / 2.45 / 2.7 GHz: 5.9 (4.8) / 8.8 (8.3) / 8.3 (6.3) dBi, beamwidth -3 dB at 2.45 GHz 82 deg (YZ) / 56 deg (XY).
+Reading: the scale 0.925 brings the resonance to within 1.7 % of the target (pure frequency correction would be s = 0.9407), but like the FR4 B3 the impedance is not 50 ohm (28 - j13),
+so the paper's 2.2-2.7 GHz band is not covered; a matching section (as for `b3_matched`) is needed. Gain 0.8 dB below the RO3003 replica at 2.45 GHz (9.6 dBi).
+
 ## FR4 B3 with matching sections: `b3_matched` (FINAL, simulated)
 Two series microstrip sections on the feed, designed by `antenna-agent match` from the unmatched S11 above (ideal lines): port side Zt 31.5 ohm (W 6.16 mm, L 20.25 mm),
 radiator side Zt 90 ohm (W 0.93 mm, L 4.75 mm); feed, board and ground lengthened by the sections (board 69.6 x 151.5 mm). Real HFSS results in `b3_matched/v100/results/`
@@ -70,7 +76,8 @@ use a standard PCB edge-launch SMA for a 1.6 mm board and take the footprint fro
 | `../gad_meander_replica` | RO3003 | simulated, validated (S11 min -27.4 dB at 2.455 GHz) |
 | `../gad_meander_b3_ro3003/s100` | RO3003 | simulated, RETAINED B3 (f_res 1.798 GHz, -10 dB band 1.650-1.878 GHz, 9.1 / 9.4 / 9.8 dBi) |
 | `replica/iter1_lambda_g` | FR4 | simulated, mistuned (f_res 2.661 GHz) |
-| `replica/v096, v100, v104` | FR4 | generated, not simulated (s = 0.925 x variant) |
+| `replica/v100` | FR4 | simulated: f_res 2.492 GHz, S11 min -10.5 dB, band 2.460-2.520 GHz, Zin 28-j13 ohm (unmatched) |
+| `replica/v096, v104` | FR4 | generated, not simulated |
 | `b3/v100` | FR4 | simulated, no -10 dB band (unmatched) |
 | `b3/v096, v104` | FR4 | generated, not simulated |
 | **`b3_matched/v100`** | FR4 | **simulated: the design to fabricate** |
