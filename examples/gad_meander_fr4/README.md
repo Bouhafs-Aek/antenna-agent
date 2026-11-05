@@ -95,6 +95,9 @@ use a standard PCB edge-launch SMA for a 1.6 mm board and take the footprint fro
 Generated from the same geometry HFSS solves (`python scripts/export_fab.py examples/gad_meander_fr4/b3_matched/specs/v100.yaml <out>`): `top_copper.gtl`, `bottom_copper.gbl` (as seen from the top, not mirrored), `outline.gko` (Gerber RS-274X, mm), `board.dxf`, `preview.png`, `fab_sheet.txt` (board 69.58 x 151.51 mm, every copper rectangle).
 The copper count matches HFSS (18 top + 16 bottom objects). Missing: SMA footprint/pads, solder mask, silkscreen, holes: add them from the connector datasheet before ordering, and view the Gerbers in a viewer first.
 
+KiCad version: `b3_matched/fabrication/kicad/` (`python scripts/export_kicad.py <spec> <out> b3_matched`, needs `pip install shapely`): `b3_matched.kicad_pcb` (copper as polygons on F.Cu/B.Cu, board outline on Edge.Cuts, connector edge at the bottom),
+and Gerber X2 files named like KiCad's (`-F_Cu.gbr`, `-B_Cu.gbr`, `-Edge_Cuts.gbr`). Checked: the Gerber copper areas equal the model's copper (1701.1 mm2 top, 4391.7 mm2 bottom). Not opened in KiCad itself (not available here): open the .kicad_pcb, place the SMA footprint on the bottom edge, run DRC, plot.
+
 ## Path to fabrication
 1. Fabricate `b3_matched`: FR4 1.6 mm, 35 um copper, double sided, finish ENIG or HASL, strip width tolerance +-0.05 mm. Ask the fab for the real er of its FR4 (4.2-4.7 moves the resonance by a few %).
 2. Choose the PCB edge-launch SMA, take the footprint from the datasheet, keep the 50 ohm strip (3.06 mm) up to the pad.

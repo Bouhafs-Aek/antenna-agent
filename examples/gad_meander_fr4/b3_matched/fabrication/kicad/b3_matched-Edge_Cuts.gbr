@@ -1,0 +1,15 @@
+G04 Created by antenna-agent export_kicad*
+%TF.GenerationSoftware,antenna-agent,export_kicad*%
+%TF.FileFunction,Profile,NP*%
+%TF.FilePolarity,Positive*%
+%FSLAX46Y46*%
+%MOMM*%
+%ADD10C,0.100000*%
+D10*
+G01*
+X65210000Y-251510000D02*
+X134790000Y-251510000D01*
+X134790000Y-100000000D01*
+X65210000Y-100000000D01*
+X65210000Y-251510000D01*
+M02*
