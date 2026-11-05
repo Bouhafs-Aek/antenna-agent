@@ -96,7 +96,7 @@ Generated from the same geometry HFSS solves (`python scripts/export_fab.py exam
 The copper count matches HFSS (18 top + 16 bottom objects). Missing: SMA footprint/pads, solder mask, silkscreen, holes: add them from the connector datasheet before ordering, and view the Gerbers in a viewer first.
 
 KiCad version: `b3_matched/fabrication/kicad/` (`python scripts/export_kicad.py <spec> <out> b3_matched`, needs `pip install shapely`): `b3_matched.kicad_pcb` (copper as polygons on F.Cu/B.Cu, board outline on Edge.Cuts, connector edge at the bottom),
-and Gerber X2 files named like KiCad's (`-F_Cu.gbr`, `-B_Cu.gbr`, `-Edge_Cuts.gbr`). Checked: the Gerber copper areas equal the model's copper (1701.1 mm2 top, 4391.7 mm2 bottom). Not opened in KiCad itself (not available here): open the .kicad_pcb, place the SMA footprint on the bottom edge, run DRC, plot.
+and Gerber X2 files named like KiCad's (`-F_Cu.gbr`, `-B_Cu.gbr`, `-Edge_Cuts.gbr`). Checked: the Gerber copper areas equal the model's copper (1701.1 mm2 top, 4391.7 mm2 bottom). Also `b3_matched.kicad_sch` + `b3_matched.kicad_pro` (`scripts/export_kicad_sch.py`: SMA connector J1 -> antenna AE1, GND on the shield; hand-written KiCad 7+ files, not opened in KiCad: run ERC, assign the footprint). Not opened in KiCad itself (not available here): open the .kicad_pcb, place the SMA footprint on the bottom edge, run DRC, plot.
 
 ## Path to fabrication
 1. Fabricate `b3_matched`: FR4 1.6 mm, 35 um copper, double sided, finish ENIG or HASL, strip width tolerance +-0.05 mm. Ask the fab for the real er of its FR4 (4.2-4.7 moves the resonance by a few %).
