@@ -18,7 +18,7 @@ Reading: the line-based rule over-shrinks the antenna: the structure's effective
 (about x1.17 instead of x1.38). Corrected scale for 2.45 GHz: s = 0.852 x 2.661 / 2.45 = **0.925** (resonance goes as 1/s).
 This assumes the file set was the central case (v100) of the first batch; the CSV files carried no label.
 
-## Iteration 2 (generated, NOT simulated): s = 0.925 x RO3003 scale, three scales each
+## Iteration 2 (generated, NOT simulated except where stated): s = 0.925 x RO3003 scale, three scales each
 | Case | Target | Variant | s | Board (mm) |
 |---|---|---|---|---|
 | replica | 2.45 GHz (paper band 2.2-2.7) | v096 / **v100** / v104 | 0.888 / 0.925 / 0.962 | 48.8x88.8 / 50.9x92.5 / 52.9x96.2 |
@@ -38,43 +38,56 @@ Real HFSS results in `b3/v100/results/` (assumed to be the central scale 1.265: 
 Not matched: the radiation is fine (gain only about 0.6 dB below the RO3003 design, 9.1 / 9.4 / 9.8), the impedance is not.
 This is the same behaviour as the FR4 replica (Zin 29 - j25 ohm): FR4 shifts the impedance and scaling alone does not restore 50 ohm.
 
-## FR4 B3 with matching sections (`b3_matched`)
-Two series microstrip sections on the feed, designed by `antenna-agent match` from the unmatched S11 above (ideal lines, discontinuities and coupling ignored):
-port side Zt 31.5 ohm (W 6.16 mm, L 20.25 mm), radiator side Zt 90 ohm (W 0.93 mm, L 4.75 mm). Predicted worst S11 over 1.71-1.88 GHz: **-4.9 -> -16.5 dB**.
+## FR4 B3 with matching sections: `b3_matched` (FINAL, simulated)
+Two series microstrip sections on the feed, designed by `antenna-agent match` from the unmatched S11 above (ideal lines): port side Zt 31.5 ohm (W 6.16 mm, L 20.25 mm),
+radiator side Zt 90 ohm (W 0.93 mm, L 4.75 mm); feed, board and ground lengthened by the sections (board 69.6 x 151.5 mm). Real HFSS results in `b3_matched/v100/results/`
+(file labels were not attached: assigned from the run order).
+| Quantity | Result |
+|---|---|
+| S11 min | **-24.0 dB at 1.755 GHz** (target 1.795, -2.2 %) |
+| -10 dB band | **1.668-2.004 GHz (336 MHz)**, covers all of B3 (1.71-1.88) |
+| -15 dB band | 1.704-1.890 GHz |
+| S11 at 1.71 / 1.795 / 1.88 GHz | -16.2 / -21.8 / -16.7 dB |
+| Zin at 1.71 / 1.795 / 1.88 GHz | 52+j16 / 51-j8 / 57-j14 ohm |
+| Gain (HFSS GainTotal) at 1.71 / 1.795 / 1.88 GHz | 7.7 / 8.4 / 8.6 dBi (RO3003 design: 9.1 / 9.4 / 9.8); no efficiency claimed |
+Margin to the B3 band edges: 42 MHz on the low side, 124 MHz on the high side.
+Iteration 1 of this case failed because of a generator bug (the sections replaced the feed instead of being added): data kept in `b3_matched/iter1_sections_replaced/results/`.
 
-**Iteration 1 (simulated, FAILED - my generator bug).** `b3_matched/iter1_sections_replaced/results/`: f_res 1.989 GHz, S11 in B3 only -2.3 / -3.4 / -7.5 dB
-(1.71 / 1.795 / 1.88 GHz), Zin 9.5 - j0.6 ohm at 1.795, realised gain 3.7 / 5.9 / 8.1 dBi. Cause: the generated board **replaced** the first 25 mm of the 50 ohm feed by the
-sections, while the prediction assumes they are **added** in series before the original feed. A transmission-line model of the replaced circuit gives -1.7 / -2.3 / -2.0 dB
-and a low-impedance load (5-7 - j11..14 ohm), the same behaviour as the HFSS result, while the "added" circuit gives -16.5 / -16.8 / -28 dB: the model is usable, the geometry was wrong.
-**Iteration 2 (generated, NOT simulated; `b3_matched/v100`).** `match` now lengthens the feed (Lms), the board (Bl) and the ground (Gnd) by the sections' total length (25 mm),
-so the original feed and stub keep their position relative to the radiator: board 69.6 x 151.5 mm. The prediction is still an ideal-line estimate; HFSS decides.
+## FR4 B3 frequency-corrected: `b3_final` (simulated, NOT retained)
+`b3_matched` with every in-plane length x 0.9777 (= 1.755/1.795) to centre the minimum. Real results in `b3_final/v100/results/`:
+S11 min -21.0 dB at 1.806 GHz, -10 dB band 1.692-1.911 GHz (221 MHz), S11 at 1.71 / 1.795 / 1.88 = -11.5 / -20.8 / -13.4 dB, gain 7.7 / 8.2 / 8.3 dBi.
+The minimum is centred (+0.6 %) but the band shrank by 115 MHz (the section widths scaled too, so their impedances moved) and the low edge has only 18 MHz of margin.
+Not retained: `b3_matched` has more margin against the FR4 er spread (4.2-4.7, about +-40 MHz).
 
-## B3 on FR4 with the SMA connector (`b3_sma/`, generated, NOT simulated)
-Same three B3 scales (1.215 / 1.265 / 1.316), now fed through an SMA end-launch (48.9 ohm coax, pin 1.27 mm, PTFE 4.1 mm, shell 6.35 mm,
-wave port 6 mm outside the board edge) instead of the ideal lumped port. This is the version that goes to fabrication, because the
-connector shifts the match. Generic SMA dimensions, **not a specific part**; never solved in HFSS Student before: if the script stops with
-"coax wave port failed", send `out_fr4\run_log_b3_sma_v100.txt`; if Student refuses the mesh (about 128k elements), shorten `out_mm`/`free_mm` in the spec.
-The ideal-port `b3/` cases are only a calibration step: run `b3_sma` directly to save time, and `b3` only if `b3_sma` misbehaves.
+## SMA connector: removed
+A coax/SMA wave-port model was tried in HFSS Student. After fixing the port (it needs a PEC back-stop), it solved but gave |S11| = 0.998 over the whole band (no power reaches the antenna),
+so it was abandoned and the cases were deleted. The final design is simulated with the ideal 50 ohm port at the board edge. The SMA is a fabrication detail:
+use a standard PCB edge-launch SMA for a 1.6 mm board and take the footprint from its datasheet (its discontinuity at 1.8 GHz is small compared with the 42 MHz low-side margin, but it is not simulated).
 
-## Path to fabrication (after the simulation)
-1. Simulate `b3_sma` (3 scales). Pick the scale whose -10 dB band covers 1.71-1.88 GHz; correct with `s_new = s * f_res / 1.795`, re-simulate once.
-2. Check radiation efficiency / gain in HFSS: FR4 (tan d 0.02) costs gain; decide if the loss is acceptable.
-3. Choose the real SMA part (PCB end-launch for 1.6 mm board), take its footprint from the datasheet (pad, ground tabs, clearance), put that footprint in the model, re-simulate.
-4. Board order: FR4 1.6 mm, 35 um copper, double sided, finish ENIG or HASL, controlled strip width +-0.05 mm; ask the fab for the real er (FR4 is 4.2-4.7, which moves the resonance by a few %).
-5. Export Gerber (top copper, bottom copper, outline, drill) from the final geometry; order 3 boards (the three scales or +-2 % around the best one).
-6. Measure S11 with a VNA (calibrated at the SMA plane) and compare with the simulation; trim the stub if the resonance is off.
-Steps 3 and 5 need the final connector choice: not done yet.
+## Status of every case
+| Case | Substrate | Status |
+|---|---|---|
+| `../gad_meander_replica` | RO3003 | simulated, validated (S11 min -27.4 dB at 2.455 GHz) |
+| `../gad_meander_b3_ro3003/s100` | RO3003 | simulated, RETAINED B3 (f_res 1.798 GHz, -10 dB band 1.650-1.878 GHz, 9.1 / 9.4 / 9.8 dBi) |
+| `replica/iter1_lambda_g` | FR4 | simulated, mistuned (f_res 2.661 GHz) |
+| `replica/v096, v100, v104` | FR4 | generated, not simulated (s = 0.925 x variant) |
+| `b3/v100` | FR4 | simulated, no -10 dB band (unmatched) |
+| `b3/v096, v104` | FR4 | generated, not simulated |
+| **`b3_matched/v100`** | FR4 | **simulated: the design to fabricate** |
+| `b3_final/v100` | FR4 | simulated, not retained |
 
-## Run (Windows, HFSS Student, from the repo root)
+## Path to fabrication
+1. Fabricate `b3_matched`: FR4 1.6 mm, 35 um copper, double sided, finish ENIG or HASL, strip width tolerance +-0.05 mm. Ask the fab for the real er of its FR4 (4.2-4.7 moves the resonance by a few %).
+2. Choose the PCB edge-launch SMA, take the footprint from the datasheet, keep the 50 ohm strip (3.06 mm) up to the pad.
+3. Export Gerber (top copper, bottom copper, outline, drill) from the geometry; order 3 boards.
+4. Measure S11 with a VNA calibrated at the SMA plane over 1.5-2.1 GHz. If the minimum is off, correct with `s_new = s * f_res / 1.795`, but expect the band to change (see `b3_final`).
+5. Not done: radiation efficiency, a real connector model, tolerance study on er.
+
+## Run (Windows, HFSS Student, from the repo root; sign out of Windows between runs)
 ```powershell
-.\examples\gad_meander_fr4\run_fr4.ps1 -Case b3_sma    # B3 with the SMA connector (3 runs): do this next
-.\examples\gad_meander_fr4\run_fr4.ps1                  # all cases (9 runs)
-.\examples\gad_meander_fr4\run_fr4.ps1 -Case replica    # replica only
+.\examples\gad_meander_fr4\run_fr4.ps1 -Case b3_matched   # the retained FR4 B3 design
+.\examples\gad_meander_fr4\run_fr4.ps1 -Case b3_final
+.\examples\gad_meander_fr4\run_fr4.ps1 -Case replica     # replica only
 .\examples\gad_meander_fr4\run_fr4.ps1 -Case b3 -Only v100
 ```
-Results go to `out_fr4\<case>_<v>\`, one summary line per run to `my_results.txt`
-(resonance, S11, Zin, -10 dB band, corrected scale `s_new = s * f_res / f_target`). Send the CSV files back, naming the case.
-
-
-## Iteration 2 result and next step
-`b3_matched` (HFSS, FR4): S11 min -24.0 dB at 1.755 GHz, -10 dB band 1.668-2.004 GHz (covers B3 1.71-1.88), gain 7.7/8.4/8.6 dBi. Next: `-Case b3_final` (all lengths x0.9777 to centre on 1.795 GHz, ideal port), then `-Case b3_final_sma` (same + SMA coax port; first time solved in HFSS Student, may hit the mesh limit).
+Results go to `out_fr4\<case>_<v>\`, one summary line per run to `my_results.txt`. Each HFSS run leaves COM entries in Windows: after a run, sign out/in before the next one, otherwise the next attach hangs.

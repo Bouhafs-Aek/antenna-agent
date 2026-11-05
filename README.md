@@ -7,7 +7,7 @@ the result against the paper. **No API key, no internet needed at run time**: Cl
 This repo follows one plan on one antenna family, **the Gad & Sallam antipodal meander end-fire antenna**:
 1. **Paper replica** on RO3003 - done, validated against the paper (`examples/gad_meander_replica/`).
 2. **LTE B3 adaptation** on RO3003, same geometry scaled, no matching network - done, **s100 is the retained design** (`examples/gad_meander_b3_ro3003/`).
-3. **Both again on FR4** (er 4.4, h 1.6 mm) - first FR4 run mistuned (f_res 2.66 GHz instead of 2.45), corrected scale 0.925 generated, to simulate (`examples/gad_meander_fr4/`).
+3. **Both again on FR4** (er 4.4, h 1.6 mm) - first FR4 run mistuned (f_res 2.66 GHz instead of 2.45), corrected scale 0.925 generated, to simulate (`examples/gad_meander_fr4/`): FR4 B3 with matching sections (`b3_matched`) simulated, S11 -24 dB at 1.755 GHz, -10 dB band 1.668-2.004 GHz, is the design to fabricate; SMA model removed (did not solve usefully).
 
 ```
 paper.pdf --(Claude)--> spec.yaml --> design --> geometry --> hfss_build.py --> HFSS Student --> s11/gain/patterns.csv --> report
@@ -42,7 +42,7 @@ LTE B3 on RO3003 (s096 / s100 / s104, results already included; **s100 is the re
 ```powershell
 .\examples\gad_meander_b3_ro3003\run_all.ps1 -Force
 ```
-FR4 versions (replica + B3, three scales each, not simulated yet):
+FR4 versions (replica + B3; `b3_matched` is the final FR4 B3 design, the others see `examples/gad_meander_fr4/README.md`):
 ```powershell
 .\examples\gad_meander_fr4\run_fr4.ps1
 ```

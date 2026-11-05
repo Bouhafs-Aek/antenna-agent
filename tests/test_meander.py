@@ -104,12 +104,6 @@ def test_fr4_cases_use_fr4_and_lambda_g_scale():
         assert missing_critical(sp) == []
 
 
-def test_fr4_b3_sma_cases_emit_a_coax_port(tmp_path):
-    from antenna_agent.agent import run
-    run(None, str(tmp_path), "hfss", str(EX / "gad_meander_fr4" / "b3_sma" / "specs" / "v100.yaml"), emit_only=True)
-    s = (tmp_path / "initial" / "hfss_build.py").read_text()
-    assert "sma_shell" in s and "wave_port" in s
-
 
 def test_fr4_b3_matched_spec_has_sections_and_emits(tmp_path):
     from antenna_agent.agent import run
@@ -131,17 +125,9 @@ def test_match_adds_sections_in_series_keeps_original_feed():
 def test_fr4_b3_final_cases_emit(tmp_path):
     from antenna_agent.agent import run
     import yaml
-    for case, has_sma in (("b3_final", False), ("b3_final_sma", True)):
+    for case, has_sma in (("b3_final", False),):
         p = EX / "gad_meander_fr4" / case / "specs" / "v100.yaml"
         d = yaml.safe_load(open(p))
         assert d["dims_mm"]["S"] == 0.92 and (d["sma"] is not None) == has_sma
         run(None, str(tmp_path / case), "hfss", str(p), emit_only=True)
         assert "_diagnose" in (tmp_path / case / "initial" / "hfss_build.py").read_text()
-
-
-def test_fr4_sma_has_pec_backstop_and_matched_sma_emits(tmp_path):
-    from antenna_agent.agent import run
-    p = EX / "gad_meander_fr4" / "b3_matched_sma" / "specs" / "v100.yaml"
-    run(None, str(tmp_path), "hfss", str(p), emit_only=True)
-    t = (tmp_path / "initial" / "hfss_build.py").read_text()
-    assert "sma_cap" in t and "wave_port" in t

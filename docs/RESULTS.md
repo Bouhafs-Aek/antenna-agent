@@ -24,3 +24,12 @@ Iteration 1 (replica on FR4, guided-wavelength scale 0.852, simulated): f_res 2.
 Corrected scale 0.925. Iteration 2 (replica and B3, three scales each) is generated and not simulated: `examples/gad_meander_fr4/`.
 
 FR4 B3 (ideal port, scale 1.265, simulated): f_res 1.823 GHz, S11 min -7.8 dB, no -10 dB band, Zin 23 - j18 ohm, gain 8.0 / 8.8 / 9.0 dBi. Matching sections, iteration 1 (simulated): failed (S11 -2.3 to -7.5 dB in B3) because the generator replaced 25 mm of feed instead of adding the sections; fixed (feed, board and ground lengthened by 25 mm), iteration 2 generated in `examples/gad_meander_fr4/b3_matched/v100`, not simulated.
+
+
+## FR4 (er 4.4, tan d 0.02, h 1.6 mm) - B3, final
+| Design | S11 min | -10 dB band | Gain 1.71 / 1.795 / 1.88 GHz |
+|---|---|---|---|
+| `b3_matched` (retained, to fabricate) | -24.0 dB at 1.755 GHz | 1.668-2.004 GHz | 7.7 / 8.4 / 8.6 dBi |
+| `b3_final` (centred, not retained) | -21.0 dB at 1.806 GHz | 1.692-1.911 GHz | 7.7 / 8.2 / 8.3 dBi |
+| `b3` unmatched | -7.8 dB at 1.823 GHz | none | 8.0 / 8.8 / 9.0 dBi |
+Gain is HFSS GainTotal (no mismatch loss, no efficiency claimed). The SMA connector is not modelled (ideal 50 ohm port); the SMA coax model was abandoned.
