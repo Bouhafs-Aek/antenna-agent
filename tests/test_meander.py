@@ -131,3 +131,11 @@ def test_fr4_b3_final_cases_emit(tmp_path):
         assert d["dims_mm"]["S"] == 0.92 and (d["sma"] is not None) == has_sma
         run(None, str(tmp_path / case), "hfss", str(p), emit_only=True)
         assert "_diagnose" in (tmp_path / case / "initial" / "hfss_build.py").read_text()
+
+
+def test_fr4_replica_matched_emits(tmp_path):
+    from antenna_agent.agent import run
+    sp = load_spec(EX / "gad_meander_fr4" / "replica_matched" / "specs" / "v100.yaml")
+    assert sp.dims_mm["Wt1"] > 0 and sp.dims_mm["Lt2"] > 0
+    run(None, str(tmp_path), "hfss", str(EX / "gad_meander_fr4" / "replica_matched" / "specs" / "v100.yaml"), emit_only=True)
+    assert (tmp_path / "initial" / "hfss_build.py").exists()

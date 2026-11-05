@@ -1,0 +1,52 @@
+name: gad_meander_fr4_replica_v100_matched
+family: meander
+f0_ghz: 2.45
+z0_ohm: 50.0
+substrate:
+  name: FR4
+  er: 4.4
+  tan_d: 0.02
+  h_mm: 1.6
+dims_mm:
+  N: 7.0
+  Bl: 105.56
+  Bw: 50.88
+  Lcon: 9.71
+  Lr1: 17.11
+  Gnd: 25.55
+  Lms: 37.57
+  Wcon: 5.55
+  Wrad: 3.7
+  S: 0.92
+  Lstub: 6.55
+  Pstub: 26.36
+  Wt1: 6.577
+  Lt1: 7.15
+  Wt2: 0.933
+  Lt2: 5.91
+reported:
+  f0_ghz: null
+  s11_min_db: null
+  bw_mhz: null
+  gain_dbi: null
+source_pages:
+- 2
+- 4
+- 5
+- 6
+confidence: 0.8
+missing: []
+notes: 'FR4 replica (s=0.925, HFSS: f_res 2.492 GHz, S11 min -10.5 dB, Zin 28-j13
+  at 2.45) + two series matching sections designed by antenna-agent match for 2.2-2.7
+  GHz (ideal lines: worst S11 -4.3 -> -11.3 dB); NOT solver-verified until simulated'
+enclosure: null
+sma: null
+cell_mm: 2.0
+fields_ghz:
+- 2.2
+- 2.45
+- 2.7
+sweep_ghz:
+- 2.0
+- 3.0
+unsupported_reason: ''

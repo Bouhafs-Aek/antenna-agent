@@ -44,6 +44,10 @@ worst S11 in 2.2-2.7 GHz -4.3 dB (at 2.7), max VSWR 4.14. Gain (HFSS, realised) 
 Reading: the scale 0.925 brings the resonance to within 1.7 % of the target (pure frequency correction would be s = 0.9407), but like the FR4 B3 the impedance is not 50 ohm (28 - j13),
 so the paper's 2.2-2.7 GHz band is not covered; a matching section (as for `b3_matched`) is needed. Gain 0.8 dB below the RO3003 replica at 2.45 GHz (9.6 dBi).
 
+### FR4 replica with matching sections: `replica_matched` (generated, NOT simulated)
+`antenna-agent match` on the real `replica/v100/results/s11.csv`, band 2.2-2.7 GHz, sections limited to 30 mm: port side Zt 30 ohm (W 6.58 mm, L 7.15 mm), radiator side Zt 90 ohm (W 0.93 mm, L 5.91 mm);
+feed, board and ground lengthened by 13.06 mm. Predicted worst S11 over 2.2-2.7 GHz: **-4.3 -> -11.3 dB** (ideal lines; HFSS decides, as for `b3_matched`). Run: `.\examples\gad_meander_fr4\run_fr4.ps1 -Case replica_matched`.
+
 ## FR4 B3 with matching sections: `b3_matched` (FINAL, simulated)
 Two series microstrip sections on the feed, designed by `antenna-agent match` from the unmatched S11 above (ideal lines): port side Zt 31.5 ohm (W 6.16 mm, L 20.25 mm),
 radiator side Zt 90 ohm (W 0.93 mm, L 4.75 mm); feed, board and ground lengthened by the sections (board 69.6 x 151.5 mm). Real HFSS results in `b3_matched/v100/results/`
@@ -77,6 +81,7 @@ use a standard PCB edge-launch SMA for a 1.6 mm board and take the footprint fro
 | `../gad_meander_b3_ro3003/s100` | RO3003 | simulated, RETAINED B3 (f_res 1.798 GHz, -10 dB band 1.650-1.878 GHz, 9.1 / 9.4 / 9.8 dBi) |
 | `replica/iter1_lambda_g` | FR4 | simulated, mistuned (f_res 2.661 GHz) |
 | `replica/v100` | FR4 | simulated: f_res 2.492 GHz, S11 min -10.5 dB, band 2.460-2.520 GHz, Zin 28-j13 ohm (unmatched) |
+| `replica_matched/v100` | FR4 | generated (predicted -11.3 dB worst case in 2.2-2.7), not simulated |
 | `replica/v096, v104` | FR4 | generated, not simulated |
 | `b3/v100` | FR4 | simulated, no -10 dB band (unmatched) |
 | `b3/v096, v104` | FR4 | generated, not simulated |
